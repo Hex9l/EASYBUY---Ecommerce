@@ -1,0 +1,201 @@
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import {SummaryApi} from '../common/SummaryApi';
+import Axios from '../utils/Axios';
+import { FaEyeSlash, FaRegEye } from "react-icons/fa6";
+
+
+const ResetPassword = () => {
+
+    const location = useLocation();
+    const [showForm] = useState(true);
+    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [data, setData] = useState({
+        email: location?.state?.email || '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+
+ 
+
+    const validValue = Object.values(data).every(value => value);
+
+
+    useEffect(() => {
+        if (!(location?.state?.data?.success)) {
+            navigate("/");
+        }
+
+        if (!location?.state?.email) {
+            setData(prevData => ({
+                ...prevData,
+                email: location?.state?.email || ''
+            }));
+        }
+
+        if (showForm) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            document.body.classList.remove("overflow-hidden");
+        }
+        return () => document.body.classList.remove("overflow-hidden");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setData(prevData => ({ ...prevData, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await Axios({
+                ...SummaryApi.resetPassword,
+                data: data
+            });
+
+            if (response.data.success) {
+                toast.success(response.data.message);
+                navigate("/login");
+                setData({
+                    email: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                })
+
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Something went wrong!");
+        }
+    };
+
+    console.log("Reset Password Data: ", data);
+
+    return (
+        showForm && (
+            <section className="w-full flex items-center justify-center px-2 sm:px-4 mt-8 ">
+                <div
+                    className="
+                    bg-gray-200 
+                    w-full 
+                    max-w-[300px] sm:max-w-md md:max-w-lg lg:max-w-xl
+                    p-3 sm:p-6 md:p-8
+                    rounded-3xl shadow-lg
+                  "
+                >
+                    {/* Title */}
+                    <p className="text-center  md:text-2xl font-semibold mb-4 md:mb-6">
+                        Enter New Password
+                    </p>
+
+                    {/* Form */}
+                    <form className="grid gap-3 md:gap-4" onSubmit={handleSubmit}>
+
+
+                        {/* password */}
+                          <div>
+                              <label htmlFor="newpassword" className="block font-medium text-xs md:text-base mb-1">New Password:</label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type={showPassword ? "text" : "password"}
+                                  id="password"
+                                  className="
+                                    w-full 
+                                    p-2 md:p-3
+                                    text-xs md:text-base
+                                    border border-gray-300 
+                                    rounded-2xl md:rounded-3xl 
+                                    shadow-md 
+                                    focus:outline-none 
+                                    bg-gray-100 focus:bg-white 
+                                    placeholder-gray-400
+                                  "
+                                  name="newPassword"
+                                  value={data.newPassword}
+                                  onChange={handleChange}
+                                  placeholder="Enter your new password"
+                                />
+                                <div
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  className="cursor-pointer p-2 md:p-3 bg-gray-100 rounded-2xl md:rounded-3xl border border-gray-300 shadow-md"
+                                >
+                                  {showPassword ? <FaRegEye /> : <FaEyeSlash />}
+                                </div>
+                              </div>
+                          
+                            </div>
+
+
+                          <div>
+                              <label htmlFor="confirmpassword" className="block font-medium text-xs md:text-base mb-1">Confirm Password:</label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type={showConfirmPassword ? "text" : "password"}
+                                  id="password"
+                                  className="
+                                    w-full 
+                                    p-2 md:p-3
+                                    text-xs md:text-base
+                                    border border-gray-300 
+                                    rounded-2xl md:rounded-3xl 
+                                    shadow-md 
+                                    focus:outline-none 
+                                    bg-gray-100 focus:bg-white 
+                                    placeholder-gray-400
+                                  "
+                                  name="confirmPassword"
+                                  value={data.confirmPassword}
+                                  onChange={handleChange}
+                                  placeholder="Enter your confirmPassword"
+                                />
+                                   <div
+                                  onClick={() =>  setShowConfirmPassword(!showConfirmPassword)} 
+                                  className="cursor-pointer p-2 md:p-3 bg-gray-100 rounded-2xl md:rounded-3xl border border-gray-300 shadow-md"
+                                >
+                                  {showConfirmPassword ? <FaRegEye /> : <FaEyeSlash />}
+                                </div>
+                              </div>
+                            
+                            </div>
+                      
+
+
+
+                        {/* Register Button */}
+                        <button
+                            className={`
+                            ${validValue ? "bg-green-600 hover:bg-green-700" : "bg-gray-400"} 
+                            w-full 
+                            text-white 
+                            text-xs md:text-base
+                            py-2 md:py-3
+                            mt-3 md:mt-4
+                            rounded-2xl md:rounded-3xl
+                            shadow-md 
+                            font-semibold 
+                            transition duration-200
+                          `}
+                        >
+                            Reset Password
+                        </button>
+                    </form>
+
+                    {/* Login Link */}
+                    <p className="text-center text-[10px] md:text-sm mt-2 text-gray-600">
+                        Already have an account...?
+                        <Link to={"/login"} className="text-green-600 hover:underline font-bold"> Login</Link>
+                    </p>
+                </div>
+            </section>
+        )
+    );
+};
+
+export default ResetPassword
