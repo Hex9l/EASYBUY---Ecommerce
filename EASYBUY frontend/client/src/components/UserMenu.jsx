@@ -18,7 +18,6 @@ const UserMenu = ({ close, closeIcon, dashboard = false }) => {
   const dispatch = useDispatch();
   const menuRef = useRef(null);
 
-  // ✅ Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -71,7 +70,7 @@ const UserMenu = ({ close, closeIcon, dashboard = false }) => {
 
 
       <div className="grid text-sm gap-2">
-        {/* ✅ Only show dashboard links if prop is true */}
+   
         {dashboard && (
           <>
             <Link to="/dashboard/category" onClick={handleClose} className="pl-2 font-semibold text-gray-700 hover:text-black">

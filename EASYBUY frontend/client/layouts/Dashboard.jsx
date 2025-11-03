@@ -1,6 +1,6 @@
 
 import { Outlet } from "react-router-dom";
-import UserMenu from "../src/components/userMenu";
+import UserMenu from "../src/components/UserMenu";
 
 const Dashboard = () => {
   return (

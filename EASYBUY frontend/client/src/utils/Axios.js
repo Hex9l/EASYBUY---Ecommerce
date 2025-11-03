@@ -6,7 +6,7 @@ const Axios = axios.create({
     withCredentials: true,
 });
 
-// 🔹 Add access token before every request
+//  Add access token before every request
 Axios.interceptors.request.use(
     async (config) => {
         const accessToken = localStorage.getItem("accessToken");
@@ -20,7 +20,7 @@ Axios.interceptors.request.use(
     }
 );
 
-// 🔹 Handle expired access tokens via refresh
+//  Handle expired access tokens via refresh
 Axios.interceptors.response.use(
     (response) => {
         return response;
@@ -46,7 +46,7 @@ Axios.interceptors.response.use(
     }
 );
 
-// 🔹 Function to get new access token
+//  Function to get new access token
 const refreshAccessToken = async (refreshToken) => {
     try {
         const response = await Axios({
