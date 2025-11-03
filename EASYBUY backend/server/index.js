@@ -8,6 +8,8 @@ import helmet from 'helmet';
 import http from 'http';
 import connectDB from './config/connectDB.js';
 import userRouter from './route/user.route.js';
+import categoryRouter from './route/category.Route.js';
+import uploadRouter from './route/upload.router.js';
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.get('/', (req, res) => {
 })
  
 app.use('/api/user', userRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/upload', uploadRouter);
 
 const server = http.createServer(app);
 

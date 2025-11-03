@@ -1,3 +1,4 @@
+
 import { Router } from 'express';
 import { forgotPasswordController, getLoginUserDetailsController, loginController, logoutController, refreshTokenController, registerUserController, resetPasswordController, updateUserDetailsController, uploadUserAvatarController, verifyForgotPasswordOtpController, verifyUserController } from '../controllers/user.controller.js';
 import auth from '../middleware/auth.js';
@@ -16,6 +17,7 @@ userRouter.put('/verify-forgot-password-otp', verifyForgotPasswordOtpController 
 userRouter.put('/reset-password',resetPasswordController);
 userRouter.post('/refresh-token', refreshTokenController);
 userRouter.get('/user-details', auth,getLoginUserDetailsController )
+
 
 export default userRouter;
 
