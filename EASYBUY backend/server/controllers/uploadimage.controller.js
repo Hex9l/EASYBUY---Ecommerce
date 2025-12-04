@@ -3,6 +3,7 @@ import uploadImageCloudinary from "../utils/uploadimageCloudinary.js";
 const uploadImageController = async (req, res) => {
   try {
     const file = req.file;
+
     if (!file) {
       return res.status(400).json({
         message: "No file provided",
@@ -12,9 +13,10 @@ const uploadImageController = async (req, res) => {
 
     const uploadedImage = await uploadImageCloudinary(file);
 
+    // ✅ Return the final Cloudinary URL under `imageUrl`
     return res.status(200).json({
       message: "Image uploaded successfully",
-      imageUrl: uploadedImage.secure_url, // ✅ use secure_url (not url)
+      imageUrl: uploadedImage.secure_url,
       success: true,
       error: false,
     });

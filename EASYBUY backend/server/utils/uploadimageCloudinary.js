@@ -20,3 +20,5 @@ const uploadImageCloudinary = async (image) => {
 }
 
 export default uploadImageCloudinary;
+
+
