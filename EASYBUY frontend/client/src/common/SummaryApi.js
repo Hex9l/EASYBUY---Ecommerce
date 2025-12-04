@@ -1,5 +1,12 @@
 
+import Axios from "axios";
+
+
 export const baseURL = "http://localhost:8000";
+
+
+Axios.defaults.baseURL = baseURL;
+Axios.defaults.withCredentials = true;
 
 export const SummaryApi = {
 
@@ -48,8 +55,12 @@ export const SummaryApi = {
         method: "POST",     
     },
     uploadimage: {
-        url: '/api/upload/upload',    
+        url: '/api/upload/upload-image',    
         method: "POST",
+    },
+    getCategory: {
+        url: '/api/category/get-category',
+        method: "GET",  
     },
 
 }

@@ -1,48 +1,84 @@
 import React, { useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import uploadImage from "../utils/uploadimage";
+import axios from "axios";
+import { SummaryApi } from "../common/SummaryApi";
+import AxiosToastError from "../utils/AxiosToastError";
+import { toast } from "react-toastify";
 
-function UploadCategoryModel({ close }) {
-  const [data, setData] = useState({ name: "", image: "" });
+
+
+
+function UploadCategoryModel({ close, fetchData }) {
+  
+  const [data, setData] = useState({
+    name: "",
+    image: ""
+  });
+  const [loading, setloading] = useState(false);
+
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted data:", data);
-  };
-  const handleUploadCategoryImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    // Local preview
-    const localPreview = URL.createObjectURL(file);
-    setData((prev) => ({ ...prev, image: localPreview }));
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await uploadImage(file);
-      console.log("Upload response:", response);
+  try {
+    setloading(true);
 
-      // Try to safely access the URL
-      const uploadedUrl =
-        response?.data?.url || response?.url || response?.data?.data?.url;
+    const response = await axios({
+      ...SummaryApi.addCategory,
+      data: { name: data.name, image: data.image },
+      withCredentials: true,
+    });
 
-      if (!uploadedUrl) throw new Error("Upload URL not found in response");
+    const responseData = response.data;
 
-      setData((prev) => ({ ...prev, image: uploadedUrl }));
-    } catch (err) {
-      console.error("Image upload failed:", err);
+    if (responseData?.success) {
+      toast.success(responseData?.message || "Category created successfully"); // ✅
+      close();
+      fetchData();
+    } else {
+      toast.error(responseData?.message || "Failed to create category"); // ✅
     }
-  };
+  } catch (error) {
+    AxiosToastError(error); // ✅
+  } finally {
+    setloading(false);
+  }
+};
 
-  // ✅ NEW: Disable button until both fields are filled
+
+
+const handleUploadCategoryImage = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const localPreview = URL.createObjectURL(file);
+  setData((prev) => ({ ...prev, image: localPreview }));
+
+  try {
+    const response = await uploadImage(file);
+    const uploadedUrl = response?.imageUrl;
+
+    if (!uploadedUrl) throw new Error("Upload URL not found in response");
+
+    setData((prev) => ({ ...prev, image: uploadedUrl }));
+    toast.success("Image uploaded successfully!"); // ✅
+  } catch (err) {
+    console.error("Image upload failed:", err);
+    toast.error("Image upload failed"); // ✅
+  }
+};
+
+  
+
+
   const isDisabled = !data.name.trim() || !data.image.trim();
-
-
-
 
   return (
     <section className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-3 sm:px-4">
@@ -63,6 +99,7 @@ function UploadCategoryModel({ close }) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+
           {/* Category Name */}
           <div className="grid gap-1.5">
             <label
@@ -105,7 +142,7 @@ function UploadCategoryModel({ close }) {
                 <img
                   src={data.image}
                   alt="Preview"
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-md object-cover border border-gray-300"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-md object-contain border border-gray-300"
                 />
               ) : (
                 <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center rounded-md bg-gray-100 border border-gray-300 text-gray-400 text-xs">
@@ -116,13 +153,13 @@ function UploadCategoryModel({ close }) {
           </div>
 
           {/* Submit Button */}
-          {/* Submit Button */}
+
           <button
             type="submit"
-            disabled={isDisabled}   // ✅ added
+            disabled={isDisabled}
             className={`w-full py-2.5 rounded-md text-white text-sm font-medium transition-colors ${isDisabled
-              ? "bg-gray-400 cursor-not-allowed"   // ✅ gray when disabled
-              : "bg-blue-600 hover:bg-blue-700"    // ✅ blue when active
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
               }`}
           >
             Upload Category

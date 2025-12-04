@@ -58,7 +58,7 @@ function App() {
       {/* Toast Notifications */}
       <ToastContainer
         position="top-center"
-        autoClose={1500}
+        autoClose={2000}
         hideProgressBar={true}
         newestOnTop={false}
         rtl={false}
