@@ -50,7 +50,7 @@ function CategoryPage() {
 
       {/* Header */}
       <div className="
-        p-4 
+        p-5
         flex items-center justify-between 
         shadow-md 
         font-semibold 

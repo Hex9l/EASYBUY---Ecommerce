@@ -126,7 +126,7 @@ const handleUploadCategoryImage = async (e) => {
               htmlFor="categoryImage"
               className="text-sm font-medium text-gray-700"
             >
-              Category Image
+              Category Image 
             </label>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
