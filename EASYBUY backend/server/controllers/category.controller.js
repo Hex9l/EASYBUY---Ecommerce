@@ -69,3 +69,8 @@ export const GetCategoryController = async (req, res) => {
     });
   }
 }
+
+export const updateCategoryController = async(req,res)=>{
+    
+  
+}
