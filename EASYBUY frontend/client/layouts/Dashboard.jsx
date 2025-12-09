@@ -20,6 +20,7 @@ const Dashboard = () => {
           <Outlet />    
         </main>
       </div>
+      
     </div>
   );
 };
