@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useEffect, useState } from 'react'
 import UploadCategoryModel from '../components/UploadCategoryModel'
 import Loading from '../components/Loading';
@@ -14,6 +10,7 @@ function CategoryPage() {
   const [openUploadCategory, setOpenUploadCategory] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
+  const [openEdit,setOpenEdit] = useState()
 
   const fetchCategory = async () => {
     try {
@@ -81,38 +78,81 @@ function CategoryPage() {
       )}
 
       {/* Categories grid */}
-      <div className=" flex flex-wrap justify-start gap-4 sm:gap-6 py-6">
+
+
+      <div className="flex flex-wrap justify-start gap-4 sm:gap-6 py-6">
 
         {categoryData?.length > 0 ? (
           categoryData.map((category) => (
             <div
               key={category._id || category.name}
               className="
-                w-[46%] sm:w-30
-                bg-white shadow-md rounded-2xl  
-                flex flex-col items-start
-                cursor-pointer transition-all duration-200
-                hover:shadow-xl
-              "
+          w-[46%] sm:w-40
+          bg-white shadow-sm rounded-2xl
+          flex flex-col
+          transition-all duration-200
+          hover:shadow-lg
+        "
             >
-              {/* Image box: fixed height, center-aligned */}
-              <div className="w-full  flex items-center justify-center overflow-hidden px-1">
+              {/* Image Section (BIGGER & CLEAR) */}
+              <div className="w-full flex items-center justify-center p-4">
                 <img
                   src={category.image || fallbackImage}
                   alt={category.name || "category"}
-                  // Use height-fill + auto width to minimize left-right white space
-                  className="object-contain rounded-xl"
+                  className="
+              object-contain
+              rounded-xl
+              max-h-40
+              w-full
+            "
                 />
               </div>
 
-              
+              {/* Subtle Divider */}
+              <div className="w-full h-px bg-gray-100"></div>
+
+              {/* Action Buttons (NORMAL SIZE) */}
+              <div className="w-full flex items-center justify-between px-4 py-3 gap-2">
+
+                {/* Edit */}
+                <button
+                  className="
+              text-green-600 text-sm font-medium
+              px-3 py-1.5
+              rounded-md
+              hover:bg-green-50
+              transition
+            "
+                >
+                  Edit
+                </button>
+
+                {/* Delete */}
+                <button
+                  className="
+              text-red-600 text-sm font-medium
+              px-3 py-1.5
+              rounded-md
+              hover:bg-red-50
+              transition
+            "
+                >
+                  Delete
+                </button>
+
+              </div>
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center w-full text-xl"></p>
+          <p className="text-gray-500 text-center w-full text-lg">
+            No categories found
+          </p>
         )}
 
       </div>
+
+
+
 
       {/* Loading */}
       {loading && (
@@ -121,7 +161,7 @@ function CategoryPage() {
         </div>
       )}
 
-      {/* Upload Modal */}
+      {/* Upload Model */}
       {openUploadCategory && (
         <UploadCategoryModel fetchData={fetchCategory} close={() => setOpenUploadCategory(false)} />
       )}
