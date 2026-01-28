@@ -4,18 +4,25 @@ import Loading from '../components/Loading';
 import NoData from '../components/NoData';
 import { SummaryApi } from '../common/SummaryApi';
 import Axios from '../utils/Axios';
+import EditCategory from '../components/EditCategory'; // Imported
+import ConfirmDelete from '../components/ConfirmDelete'; // Imported
+import { toast } from 'react-toastify';
+import AxiosToastError from '../utils/AxiosToastError';
 
 function CategoryPage() {
-
   const [openUploadCategory, setOpenUploadCategory] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
-  const [openEdit,setOpenEdit] = useState()
+
+  // State for Edit/Delete
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [deleteCategory, setDeleteCategory] = useState({ _id: "" });
 
   const fetchCategory = async () => {
     try {
       setLoading(true);
-
       const response = await Axios({
         ...SummaryApi.getCategory,
       });
@@ -26,7 +33,6 @@ function CategoryPage() {
       } else {
         setCategoryData([]);
       }
-
     } catch (error) {
       console.error("Error fetching categories:", error);
       setCategoryData([]);
@@ -39,120 +45,89 @@ function CategoryPage() {
     fetchCategory();
   }, []);
 
+  const handleDeleteCategory = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.deleteCategory,
+        data: { categoryId: deleteCategory._id } // Send data body
+      });
+
+      const { data: responseData } = response;
+
+      if (responseData.success) {
+        toast.success(responseData.message);
+        fetchCategory();
+        setOpenDelete(false);
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  }
+
   // Local fallback image (developer-provided path)
   const fallbackImage = "/mnt/data/8f83db83-e7b8-4286-96a1-f997eb60161c.png";
 
   return (
-    <section className="w-full max-w-6xl mx-auto px-4">
-
-      {/* Header */}
-      <div className="
-        p-4
-        flex items-center justify-between 
-        shadow-md 
-        font-semibold 
-        text-base 
-        sm:text-lg 
-        md:text-xl
-        
-      ">
-        <h2>Category</h2>
-
+    <section className='min-h-full'>
+      <div className='sticky top-24 lg:top-20 z-10 p-4 lg:p-6 bg-white/95 backdrop-blur-md shadow-sm border border-gray-100 rounded-2xl flex items-center justify-between mb-6'>
+        <h2 className='font-bold text-xl lg:text-2xl text-gray-800'>Categories</h2>
         <button
           onClick={() => setOpenUploadCategory(true)}
-          className="
-            text-sm sm:text-base
-            rounded-md py-1 px-3 
-            bg-blue-500 text-white hover:bg-blue-600 
-          "
+          className='bg-[#00b050] text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-xl lg:rounded-2xl font-bold shadow-lg shadow-[#00b050]/20 hover:bg-[#00b060] transition-all active:scale-95 text-sm lg:text-base'
         >
           Add Category
         </button>
       </div>
 
-      {/* No Data */}
       {categoryData.length === 0 && !loading && (
-        <div className="flex justify-center mt-8 px-4">
+        <div className='min-h-[60vh] flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border border-gray-100'>
           <NoData />
         </div>
       )}
 
-      {/* Categories grid */}
-
-
-      <div className="flex flex-wrap justify-start gap-4 sm:gap-6 py-6">
-
-        {categoryData?.length > 0 ? (
-          categoryData.map((category) => (
-            <div
-              key={category._id || category.name}
-              className="
-          w-[46%] sm:w-40
-          bg-white shadow-sm rounded-2xl
-          flex flex-col
-          transition-all duration-200
-          hover:shadow-lg
-        "
-            >
-              {/* Image Section (BIGGER & CLEAR) */}
-              <div className="w-full flex items-center justify-center p-4">
-                <img
-                  src={category.image || fallbackImage}
-                  alt={category.name || "category"}
-                  className="
-              object-contain
-              rounded-xl
-              max-h-40
-              w-full
-            "
-                />
-              </div>
-
-              {/* Subtle Divider */}
-              <div className="w-full h-px bg-gray-100"></div>
-
-              {/* Action Buttons (NORMAL SIZE) */}
-              <div className="w-full flex items-center justify-between px-4 py-3 gap-2">
-
-                {/* Edit */}
-                <button
-                  className="
-              text-green-600 text-sm font-medium
-              px-3 py-1.5
-              rounded-md
-              hover:bg-green-50
-              transition
-            "
-                >
-                  Edit
-                </button>
-
-                {/* Delete */}
-                <button
-                  className="
-              text-red-600 text-sm font-medium
-              px-3 py-1.5
-              rounded-md
-              hover:bg-red-50
-              transition
-            "
-                >
-                  Delete
-                </button>
-
-              </div>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-4 lg:gap-6'>
+        {categoryData.map((category) => (
+          <div
+            key={category._id}
+            className='group bg-white p-3 lg:p-4 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300'
+          >
+            <div className='h-24 lg:h-32 w-full mb-3 lg:mb-4 flex items-center justify-center bg-gray-50/50 rounded-2xl lg:rounded-3xl overflow-hidden group-hover:bg-[#00b050]/5 transition-colors duration-500'>
+              <img
+                src={category.image || fallbackImage}
+                alt={category.name}
+                className='w-full h-full object-scale-down p-2 group-hover:scale-110 transition-transform duration-500'
+              />
             </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center w-full text-lg">
-            No categories found
-          </p>
-        )}
 
+            <div className='px-1 mb-3 lg:mb-4'>
+              <h3 className='font-bold text-gray-800 text-center truncate text-sm lg:text-[15px]' title={category.name}>
+                {category.name}
+              </h3>
+            </div>
+
+            <div className='flex items-center gap-1.5 lg:gap-2'>
+              <button
+                onClick={() => {
+                  setEditData(category);
+                  setOpenEdit(true);
+                }}
+                className='flex-1 py-2 text-xs font-bold border-2 border-[#00b050]/20 bg-[#00b050]/5 text-[#00b050] hover:bg-[#00b050] hover:text-white hover:border-[#00b050] rounded-xl transition-all'
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => {
+                  setDeleteCategory(category);
+                  setOpenDelete(true);
+                }}
+                className='flex-1 py-2 text-xs font-bold border-2 border-red-100 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 rounded-xl transition-all'
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-
-
-
 
       {/* Loading */}
       {loading && (
@@ -165,6 +140,25 @@ function CategoryPage() {
       {openUploadCategory && (
         <UploadCategoryModel fetchData={fetchCategory} close={() => setOpenUploadCategory(false)} />
       )}
+
+      {/* Edit Model */}
+      {openEdit && (
+        <EditCategory
+          data={editData}
+          close={() => setOpenEdit(false)}
+          fetchData={fetchCategory}
+        />
+      )}
+
+      {/* Delete Confirmation */}
+      {openDelete && (
+        <ConfirmDelete
+          close={() => setOpenDelete(false)}
+          cancel={() => setOpenDelete(false)}
+          confirm={handleDeleteCategory}
+        />
+      )}
+
     </section>
   )
 }

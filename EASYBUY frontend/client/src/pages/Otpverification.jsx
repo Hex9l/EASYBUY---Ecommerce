@@ -1,30 +1,15 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
-import { FaEyeSlash, FaRegEye } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Axios from '../utils/Axios';
-import {SummaryApi} from '../common/SummaryApi';
+import { SummaryApi } from '../common/SummaryApi';
 import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 const Otpverification = () => {
   const [data, setData] = useState(["", "", "", "", "", ""]);
-  const [showForm] = useState(true);
   const navigate = useNavigate();
   const inputRef = useRef([]);
   const location = useLocation();
-
-  useEffect(() => {
-    if (showForm) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
-
-    return () => document.body.classList.remove("overflow-hidden");
-
-  }, [showForm]);
-
 
   useEffect(() => {
     if (!location.state?.email) {
@@ -34,13 +19,10 @@ const Otpverification = () => {
     }
   }, [location.state?.email, navigate]);
 
- 
-
   const validValue = data.every(value => value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
 
     try {
       const response = await Axios({
@@ -54,14 +36,12 @@ const Otpverification = () => {
       if (response.data.success) {
         toast.success(response.data.message);
         setData(["", "", "", "", "", ""]);
-        navigate("/reset-password",{
+        navigate("/reset-password", {
           state: {
             data: response.data,
             email: location.state?.email
           }
-
         })
-
       } else {
         toast.error(response.data.message);
       }
@@ -71,109 +51,104 @@ const Otpverification = () => {
   };
 
   return (
-    showForm && (
-      <section className="w-full flex items-center justify-center px-2 sm:px-4 mt-8 ">
-        <div
-          className="
-      bg-gray-200 
-      w-full 
-      max-w-[300px] sm:max-w-md md:max-w-lg lg:max-w-xl
-      p-3 sm:p-6 md:p-8
-      rounded-3xl shadow-lg
-    "
-        >
-          {/* Title */}
-          <p className="text-center  md:text-2xl font-semibold mb-4 md:mb-6">
-            OTP Verification
-          </p>
+    <section className="min-h-[90vh] w-full flex items-center justify-center px-4 relative overflow-hidden bg-slate-50">
+      {/* Animated Background Elements */}
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-100 rounded-full blur-3xl opacity-50 animate-pulse delay-700" />
 
-          {/* Form */}
-          <form className="grid gap-2 md:gap-4" onSubmit={handleSubmit}>
-
-
-            {/* otp */}
-            <div>
-              <label htmlFor="otp" className="block font-medium text-xs md:text-base mb-1">Enter Your OTP :</label>
-              <div className='grid grid-cols-6 gap-1 sm:gap-3 mt-4'>
-                {
-                  data.map((item, index) => {
-                    return (
-                      <input
-                        key={index}
-                        type="text"
-                        id={`otp-${index}`}
-                        ref={(ref) => {
-                          inputRef.current[index] = ref;
-                          return ref;
-                        }}
-                        className="
-          w-full 
-          p-2 md:p-3
-          text-xs md:text-3xl text-center
-          border border-gray-300 
-          rounded-2xl md:rounded-3xl 
-          shadow-md 
-          focus:outline-none 
-          bg-gray-100 focus:bg-white 
-          placeholder-gray-400
-        "
-                        name={`otp-${index}`}
-                        maxLength="1"
-                        value={item}
-                        onChange={(e) => {
-                          const newData = [...data];
-                          newData[index] = e.target.value;
-                          setData(newData);
-
-                          if (e.target.value) {
-                            inputRef.current[index + 1]?.focus();
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Backspace" && !e.target.value) {
-                            inputRef.current[index - 1]?.focus();
-                          }
-                        }}
-                      />
-                    );
-                  })
-                }
-              </div>
-
-            </div>
-
-
-
-            {/* Register Button */}
-            <button
-              className={`
-          ${validValue ? "bg-green-600 hover:bg-green-700" : "bg-gray-400"} 
-          w-full 
-          text-white 
-          text-xs md:text-base
-          py-2 md:py-3
-          mt-3 md:mt-4
-          rounded-2xl md:rounded-3xl
-          shadow-md 
-          font-semibold 
-          transition duration-200
-        `}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md"
+      >
+        <div className="bg-white/80 backdrop-blur-xl border border-white/40 p-4 md:p-8 rounded-[2.5rem] shadow-2xl shadow-green-900/10">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <motion.h1
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              className="text-3xl font-bold text-gray-800"
             >
               Verify OTP
-            </button>
+            </motion.h1>
+            <p className="text-gray-500 mt-2 text-sm">
+              We've sent a 6-digit code to <br />
+              <span className="font-semibold text-gray-700">{location.state?.email}</span>
+            </p>
+          </div>
+
+          {/* Form */}
+          <form className="space-y-8" onSubmit={handleSubmit}>
+            <div className="flex justify-between gap-1 sm:gap-2">
+              {data.map((item, index) => (
+                <motion.input
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  type="text"
+                  id={`otp-${index}`}
+                  ref={(ref) => {
+                    inputRef.current[index] = ref;
+                    return ref;
+                  }}
+                  maxLength="1"
+                  value={item}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (!/^\d*$/.test(value)) return;
+
+                    const newData = [...data];
+                    newData[index] = value.slice(-1);
+                    setData(newData);
+
+                    if (value && index < 5) {
+                      inputRef.current[index + 1]?.focus();
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Backspace" && !data[index] && index > 0) {
+                      inputRef.current[index - 1]?.focus();
+                    }
+                  }}
+                  className="w-10 h-12 sm:w-14 sm:h-16 text-xl sm:text-2xl font-bold text-center bg-gray-50/50 border border-gray-200 rounded-xl sm:rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-green-600"
+                />
+              ))}
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={!validValue}
+              className={`
+                w-full py-4 rounded-2xl font-bold text-white shadow-lg shadow-green-600/20 
+                transition-all duration-300 flex items-center justify-center gap-2
+                ${validValue
+                  ? "bg-gradient-to-r from-green-600 to-green-500 hover:shadow-green-600/40"
+                  : "bg-gray-400 cursor-not-allowed"}
+              `}
+            >
+              Verify OTP
+            </motion.button>
           </form>
 
-          {/* Login Link */}
-          <p className="text-center text-[10px] md:text-sm mt-2 text-gray-600">
-            Already have an account...?
-            <Link to={"/login"} className="text-green-600 hover:underline font-bold"> Login</Link>
-          </p>
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 text-sm">
+              Didn't receive the code?{" "}
+              <button
+                onClick={() => navigate("/forgot-password")}
+                className="text-green-600 font-bold hover:underline transition-all"
+              >
+                Resend
+              </button>
+            </p>
+          </div>
         </div>
-      </section>
-
-
-    )
+      </motion.div>
+    </section>
   );
 };
 
-export default Otpverification; 
+export default Otpverification;

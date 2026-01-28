@@ -1,21 +1,16 @@
-
-import React, { useState, useRef, useEffect } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
-import { useSelector, useDispatch } from 'react-redux';
-import Axios from '../utils/Axios';
-import { SummaryApi } from '../common/SummaryApi';
-import { updateAvatar } from '../store/userSlice';
-import AxiosToastError from '../utils/AxiosToastError';
+import React, { useState, useRef, useEffect } from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import Axios from "../utils/Axios";
+import { SummaryApi } from "../common/SummaryApi";
+import { updateAvatar } from "../store/userSlice";
+import AxiosToastError from "../utils/AxiosToastError";
 
 const UserProfileAvatarEdit = ({ close }) => {
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const modalRef = useRef(null);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    };
 
     const handleUploadAvatarImage = async (e) => {
         const file = e.target.files[0];
@@ -28,14 +23,16 @@ const UserProfileAvatarEdit = ({ close }) => {
             setLoading(true);
 
             const response = await Axios({
-                ...SummaryApi.uploadAvatar,
+                ...SummaryApi.uploadAvatar, // PUT /api/user/upload-avatar
                 data: formData,
             });
 
-            console.log("Avatar uploaded successfully:", response.data);
+            // ✅ Cloudinary URL must come from backend
+            const avatarUrl = response?.data?.data?.avatar;
 
-            const { data: responseData } = response;
-            dispatch(updateAvatar(responseData.data.avatar));
+            if (avatarUrl) {
+                dispatch(updateAvatar(avatarUrl));
+            }
 
         } catch (error) {
             AxiosToastError(error);
@@ -44,7 +41,7 @@ const UserProfileAvatarEdit = ({ close }) => {
         }
     };
 
-    // ✅ Close when clicking outside
+    // ✅ Close modal on outside click
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -62,16 +59,18 @@ const UserProfileAvatarEdit = ({ close }) => {
         <section className="fixed inset-0 w-full h-full bg-[rgba(0,0,0,0.6)] flex items-center justify-center z-[9999]">
             <div
                 ref={modalRef}
-                className="bg-white m-10 rounded-xl shadow-lg py-10 w-full max-w-md flex flex-col items-center relative"
+                className="bg-white m-10 rounded-xl shadow-lg py-10 w-full max-w-md flex flex-col items-center"
             >
-                <h2 className="text-xl font-semibold mb-6">Edit Profile Avatar</h2>
+                <h2 className="text-xl font-semibold mb-6">
+                    Edit Profile Avatar
+                </h2>
 
                 {/* Avatar Preview */}
-                <div className="w-20 h-20 bg-red-300 flex items-center justify-center rounded-full overflow-hidden drop-shadow-lg">
-                    {user.avatar ? (
+                <div className="w-20 h-20 bg-gray-200 flex items-center justify-center rounded-full overflow-hidden drop-shadow-lg">
+                    {user?.avatar ? (
                         <img
-                            src={user.avatar}
-                            alt={user.name}
+                            src={user.avatar}   // ✅ MUST be cloudinary URL
+                            alt="User Avatar"
                             className="w-full h-full object-cover"
                         />
                     ) : (
@@ -79,30 +78,24 @@ const UserProfileAvatarEdit = ({ close }) => {
                     )}
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="uploadProfile" className="cursor-pointer">
-                        <div
-                            className={`flex items-center justify-center px-5 py-2 mt-5 max-w-20 rounded-full ${
-                                loading
-                                    ? "bg-red-600 hover:bg-red-700"
-                                    : "bg-blue-600 hover:bg-blue-700"
-                            } text-white`}
-                        >
-                            <span className="text-sm">
-                                {loading ? "Loading..." : "Upload"}
-                            </span>
-                        </div>
+                <label
+                    htmlFor="uploadProfile"
+                    className={`mt-5 px-5 py-2 rounded-full cursor-pointer text-white ${loading
+                            ? "bg-gray-500"
+                            : "bg-blue-600 hover:bg-blue-700"
+                        }`}
+                >
+                    {loading ? "Uploading..." : "Upload"}
 
-                        <input
-                            onChange={handleUploadAvatarImage}
-                            type="file"
-                            id="uploadProfile"
-                            accept="image/*"
-                            className="hidden"
-                            disabled={loading}
-                        />
-                    </label>
-                </form>
+                    <input
+                        type="file"
+                        id="uploadProfile"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleUploadAvatarImage}
+                        disabled={loading}
+                    />
+                </label>
             </div>
         </section>
     );

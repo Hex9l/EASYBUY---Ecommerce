@@ -1,14 +1,18 @@
 
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import logo from '../assets/logo.png'
+import logo from '../assets/easybuy-logo.png'
 import Search from './Search'
 import { FaUserCircle } from "react-icons/fa";
 import useMobile from '../hooks/useMobile';
 import { FaShoppingCart, FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import UserMenu from './userMenu';
+import LocationPicker from './LocationPicker';
+import { useGlobalContext } from '../provider/GlobalProvider';
+import DisplayCartItem from './DisplayCartItem';
+import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees';
 
 function Header({ showSearch }) {
   const isMobile = useMobile();
@@ -16,8 +20,24 @@ function Header({ showSearch }) {
   const isSearchPage = location.pathname === "/search";
 
   const user = useSelector((state) => state?.user);
+  const addressList = useSelector((state) => state?.addresses?.addressList);
+  const selectedAddress = useSelector((state) => state?.addresses?.selectedAddress);
   const [openUserMenu, setOpenUserMenu] = useState(false);
+  const [openAddressModal, setOpenAddressModal] = useState(false);
+  const [openCartSection, setOpenCartSection] = useState(false);
+  const { totalQty, totalPrice } = useGlobalContext();
   const navigate = useNavigate();
+
+  // Memoize the address to prevent unnecessary re-renders
+  const displayAddress = useMemo(() => {
+    if (selectedAddress) return selectedAddress;
+
+    if (addressList && addressList.length > 0) {
+      const headerAddress = addressList[0];
+      return `${headerAddress.city}, ${headerAddress.state}`;
+    }
+    return "Mumbai, India";
+  }, [addressList, selectedAddress]);
 
   const handleCloseUserMenu = () => {
     setOpenUserMenu(false);
@@ -31,77 +51,111 @@ function Header({ showSearch }) {
     navigate('/user');
   };
 
-  // 👇 Handle auto-open/close Account menu on resize
-  // useEffect(() => {
-  //   if (!isMobile && user?._id) {
-  //     // desktop
-  //     // setOpenUserMenu(true);
-  //   } else {
-  //     // mobile
-  //     setOpenUserMenu(false);
-  //   }
-  // }, [isMobile, user?._id]);
-
   return (
-    <header className="h-33 lg:h-20 lg:shadow-md sticky top-0 flex justify-center flex-col items-center bg-white z-50">
+    <header className="h-20 lg:h-24 lg:shadow-md sticky top-0 flex justify-center flex-col items-center bg-white z-50 px-2 lg:px-0 transition-all duration-300">
       {
         !(isMobile && isSearchPage) && (
-          <div className='container mx-auto flex items-center pt-0 lg:pt-5 justify-between p-4'>
+          <div className='container mx-auto flex items-center pt-2 pb-2 px-2 md:px-4 lg:px-6 justify-between gap-4 lg:gap-8'>
             {/* Logo */}
-            <div className='h-full ml-7'>
-              <Link to={"/"} className='h-full flex items-center justify-center'>
-                <img src={logo} width={150} alt="logo" className='hidden lg:block' />
-                <img src={logo} width={120} alt="logo" className='lg:hidden' />
-              </Link>
+            <div className='flex items-center gap-4 md:gap-6 lg:gap-10 shrink-0'>
+              <div className='flex items-center justify-start shrink-0'>
+                <Link to={"/"} className='flex items-center justify-center p-1'>
+                  <img src={logo} width={200} height={70} alt="EasyBuy" className='hidden lg:block object-contain transition-transform duration-300 hover:scale-105' />
+                  <img src={logo} width={150} height={50} alt="EasyBuy" className='lg:hidden object-contain max-w-[150px]' />
+                </Link>
+              </div>
+
+              {/* Delivery Info - Desktop */}
+              <div className='hidden lg:flex flex-col gap-0.5 leading-tight shrink-0'>
+                <p className='font-bold text-lg text-gray-900'>Delivery in 8 minutes</p>
+                <div
+                  className='flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors'
+                  onClick={() => setOpenAddressModal(true)} // Open Modal
+                >
+                  <span className='text-sm text-gray-600 truncate max-w-[150px]'>{displayAddress}</span>
+                  <FaCaretDown className='text-gray-600 size-3' />
+                </div>
+              </div>
             </div>
 
             {/* search bar */}
-            <div className='hidden lg:block'>
+            <div className='hidden lg:block flex-1 max-w-3xl'>
               {showSearch && <Search />}
             </div>
 
             {/* login and my cart */}
-            <div>
-              {/* usericon display in mobile version */}
-              <button className='text-neutral-500 lg:hidden mr-5' onClick={handleMobileUser}>
-                <FaUserCircle size={30} />
+            <div className='flex items-center gap-2 md:gap-6'>
+
+              {/* Mobile User Icon */}
+              <button className='text-neutral-500 lg:hidden' onClick={handleMobileUser}>
+                <FaUserCircle size={26} />
               </button>
 
-              {/* desktop version */}
+              {/* Mobile Cart Icon */}
+              <button 
+                onClick={() => setOpenCartSection(true)} 
+                className='text-green-600 lg:hidden relative'
+              >
+                <FaShoppingCart size={26} />
+                {totalQty > 0 && (
+                  <span className='absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white'>
+                    {totalQty}
+                  </span>
+                )}
+              </button>
+
+              {/* Desktop Actions */}
               <div className='hidden lg:flex items-center gap-8'>
                 {
                   user?._id ? (
                     <div className='relative'>
                       <div
-                        className='flex items-center cursor-pointer gap-2 font-semibold text-gray-700 hover:text-gray-900'
+                        className='flex items-center cursor-pointer gap-2 font-medium text-gray-800 hover:text-gray-900'
                         onClick={() => setOpenUserMenu(!openUserMenu)}
                       >
                         <p>Account</p>
                         {openUserMenu ? (
-                          <FaCaretUp className='mb-1 size-5' />
+                          <FaCaretUp className='mb-1 size-4' />
                         ) : (
-                          <FaCaretDown className='mb-1 size-5' />
+                          <FaCaretDown className='mb-1 size-4' />
                         )}
                       </div>
 
                       {/* User Menu */}
                       {openUserMenu && (
-                        <div className='absolute top-15 right-0 shadow-lg rounded-md w-2xs'>
+                        <div className='absolute top-12 right-0 shadow-xl rounded-xl bg-white w-60 border border-gray-100 p-2 z-50'>
                           <UserMenu close={handleCloseUserMenu} />
                         </div>
                       )}
                     </div>
                   ) : (
-                    <Link className='font-semibold text-gray-700 hover:text-black' to="/login">Login</Link>
+                    <Link className='font-medium text-lg text-gray-700 hover:text-gray-900' to="/login">Login</Link>
                   )
                 }
 
-                <button className='flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md'>
-                  <div className='text-white flex items-center animate-bounce mt-2.5'>
-                    <FaShoppingCart size={30} />
+                <button
+                  onClick={() => setOpenCartSection(true)}
+                  className='flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl shadow-sm transition-all active:scale-95'
+                >
+                  <div className='relative'>
+                    <FaShoppingCart size={25} className='mt-1' />
+                    {totalQty > 0 && (
+                      <span className='absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-green-600'>
+                        {totalQty}
+                      </span>
+                    )}
                   </div>
-                  <div className='text-white text-sm font-semibold'>
-                    <p>My Cart</p>
+                  <div className='text-white font-bold text-base'>
+                    {
+                      totalQty > 0 ? (
+                        <div className='flex flex-col items-start'>
+                          <p className='text-xs font-semibold'>{totalQty} Items</p>
+                          <p>{DisplayPriceInRupees(totalPrice)}</p>
+                        </div>
+                      ) : (
+                        <p>My Cart</p>
+                      )
+                    }
                   </div>
                 </button>
               </div>
@@ -111,9 +165,12 @@ function Header({ showSearch }) {
       }
 
       {/* Mobile search bar */}
-      <div className='container mx-auto px-10 lg:hidden'>
+      <div className='container mx-auto px-2 lg:hidden'>
         <Search />
       </div>
+
+      {openAddressModal && <LocationPicker close={() => setOpenAddressModal(false)} />}
+      {openCartSection && <DisplayCartItem close={() => setOpenCartSection(false)} />}
     </header>
   )
 }

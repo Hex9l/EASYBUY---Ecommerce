@@ -1,201 +1,185 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import {SummaryApi} from '../common/SummaryApi';
+import { SummaryApi } from '../common/SummaryApi';
 import Axios from '../utils/Axios';
 import { FaEyeSlash, FaRegEye } from "react-icons/fa6";
-
+import { motion } from 'framer-motion';
 
 const ResetPassword = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [data, setData] = useState({
+    email: location?.state?.email || '',
+    newPassword: '',
+    confirmPassword: ''
+  });
 
-    const location = useLocation();
-    const [showForm] = useState(true);
-    const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [data, setData] = useState({
-        email: location?.state?.email || '',
-        newPassword: '',
-        confirmPassword: ''
-    });
+  const validValue = Object.values(data).every(value => value);
 
- 
+  useEffect(() => {
+    if (!(location?.state?.data?.success)) {
+      navigate("/");
+    }
 
-    const validValue = Object.values(data).every(value => value);
+    if (!location?.state?.email) {
+      setData(prevData => ({
+        ...prevData,
+        email: location?.state?.email || ''
+      }));
+    }
+  }, [location, navigate]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setData(prevData => ({ ...prevData, [name]: value }));
+  };
 
-    useEffect(() => {
-        if (!(location?.state?.data?.success)) {
-            navigate("/");
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (!location?.state?.email) {
-            setData(prevData => ({
-                ...prevData,
-                email: location?.state?.email || ''
-            }));
-        }
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
 
-        if (showForm) {
-            document.body.classList.add("overflow-hidden");
-        } else {
-            document.body.classList.remove("overflow-hidden");
-        }
-        return () => document.body.classList.remove("overflow-hidden");
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    try {
+      const response = await Axios({
+        ...SummaryApi.resetPassword,
+        data: data
+      });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setData(prevData => ({ ...prevData, [name]: value }));
-    };
+      if (response.data.success) {
+        toast.success(response.data.message);
+        navigate("/login");
+        setData({
+          email: '',
+          newPassword: '',
+          confirmPassword: ''
+        })
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong!");
+    }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  return (
+    <section className="min-h-[90vh] w-full flex items-center justify-center px-4 relative overflow-hidden bg-slate-50 py-10">
+      {/* Animated Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-100 rounded-full blur-3xl opacity-50 animate-pulse" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50 animate-pulse delay-700" />
 
-        try {
-            const response = await Axios({
-                ...SummaryApi.resetPassword,
-                data: data
-            });
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-md"
+      >
+        <div className="bg-white/80 backdrop-blur-xl border border-white/40 p-4 md:p-8 rounded-[2.5rem] shadow-2xl shadow-green-900/10">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <motion.h1
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              className="text-3xl font-bold text-gray-800"
+            >
+              Reset Password
+            </motion.h1>
+            <p className="text-gray-500 mt-2 text-sm">Create a new secure password for your account.</p>
+          </div>
 
-            if (response.data.success) {
-                toast.success(response.data.message);
-                navigate("/login");
-                setData({
-                    email: '',
-                    newPassword: '',
-                    confirmPassword: ''
-                })
-
-            } else {
-                toast.error(response.data.message);
-            }
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Something went wrong!");
-        }
-    };
-
-    console.log("Reset Password Data: ", data);
-
-    return (
-        showForm && (
-            <section className="w-full flex items-center justify-center px-2 sm:px-4 mt-8 ">
-                <div
-                    className="
-                    bg-gray-200 
-                    w-full 
-                    max-w-[300px] sm:max-w-md md:max-w-lg lg:max-w-xl
-                    p-3 sm:p-6 md:p-8
-                    rounded-3xl shadow-lg
-                  "
+          {/* Form */}
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">
+                New Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="newPassword"
+                  name="newPassword"
+                  value={data.newPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 placeholder:text-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-600 transition-colors p-1"
                 >
-                    {/* Title */}
-                    <p className="text-center  md:text-2xl font-semibold mb-4 md:mb-6">
-                        Enter New Password
-                    </p>
+                  {showPassword ? <FaRegEye size={20} /> : <FaEyeSlash size={20} />}
+                </button>
+              </div>
+            </motion.div>
 
-                    {/* Form */}
-                    <form className="grid gap-3 md:gap-4" onSubmit={handleSubmit}>
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">
+                Confirm New Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={data.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 placeholder:text-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-600 transition-colors p-1"
+                >
+                  {showConfirmPassword ? <FaRegEye size={20} /> : <FaEyeSlash size={20} />}
+                </button>
+              </div>
+            </motion.div>
 
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={!validValue}
+              className={`
+                                w-full py-4 rounded-2xl font-bold text-white shadow-lg shadow-green-600/20 
+                                transition-all duration-300 flex items-center justify-center gap-2 mt-2
+                                ${validValue
+                  ? "bg-gradient-to-r from-green-600 to-green-500 hover:shadow-green-600/40"
+                  : "bg-gray-400 cursor-not-allowed"}
+                            `}
+            >
+              Update Password
+            </motion.button>
+          </form>
 
-                        {/* password */}
-                          <div>
-                              <label htmlFor="newpassword" className="block font-medium text-xs md:text-base mb-1">New Password:</label>
-                              <div className="flex items-center gap-2">
-                                <input
-                                  type={showPassword ? "text" : "password"}
-                                  id="password"
-                                  className="
-                                    w-full 
-                                    p-2 md:p-3
-                                    text-xs md:text-base
-                                    border border-gray-300 
-                                    rounded-2xl md:rounded-3xl 
-                                    shadow-md 
-                                    focus:outline-none 
-                                    bg-gray-100 focus:bg-white 
-                                    placeholder-gray-400
-                                  "
-                                  name="newPassword"
-                                  value={data.newPassword}
-                                  onChange={handleChange}
-                                  placeholder="Enter your new password"
-                                />
-                                <div
-                                  onClick={() => setShowPassword(!showPassword)}
-                                  className="cursor-pointer p-2 md:p-3 bg-gray-100 rounded-2xl md:rounded-3xl border border-gray-300 shadow-md"
-                                >
-                                  {showPassword ? <FaRegEye /> : <FaEyeSlash />}
-                                </div>
-                              </div>
-                          
-                            </div>
-
-
-                          <div>
-                              <label htmlFor="confirmpassword" className="block font-medium text-xs md:text-base mb-1">Confirm Password:</label>
-                              <div className="flex items-center gap-2">
-                                <input
-                                  type={showConfirmPassword ? "text" : "password"}
-                                  id="password"
-                                  className="
-                                    w-full 
-                                    p-2 md:p-3
-                                    text-xs md:text-base
-                                    border border-gray-300 
-                                    rounded-2xl md:rounded-3xl 
-                                    shadow-md 
-                                    focus:outline-none 
-                                    bg-gray-100 focus:bg-white 
-                                    placeholder-gray-400
-                                  "
-                                  name="confirmPassword"
-                                  value={data.confirmPassword}
-                                  onChange={handleChange}
-                                  placeholder="Enter your confirmPassword"
-                                />
-                                   <div
-                                  onClick={() =>  setShowConfirmPassword(!showConfirmPassword)} 
-                                  className="cursor-pointer p-2 md:p-3 bg-gray-100 rounded-2xl md:rounded-3xl border border-gray-300 shadow-md"
-                                >
-                                  {showConfirmPassword ? <FaRegEye /> : <FaEyeSlash />}
-                                </div>
-                              </div>
-                            
-                            </div>
-                      
-
-
-
-                        {/* Register Button */}
-                        <button
-                            className={`
-                            ${validValue ? "bg-green-600 hover:bg-green-700" : "bg-gray-400"} 
-                            w-full 
-                            text-white 
-                            text-xs md:text-base
-                            py-2 md:py-3
-                            mt-3 md:mt-4
-                            rounded-2xl md:rounded-3xl
-                            shadow-md 
-                            font-semibold 
-                            transition duration-200
-                          `}
-                        >
-                            Reset Password
-                        </button>
-                    </form>
-
-                    {/* Login Link */}
-                    <p className="text-center text-[10px] md:text-sm mt-2 text-gray-600">
-                        Already have an account...?
-                        <Link to={"/login"} className="text-green-600 hover:underline font-bold"> Login</Link>
-                    </p>
-                </div>
-            </section>
-        )
-    );
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 text-sm">
+              Back to{" "}
+              <Link to="/login" className="text-green-600 font-bold hover:underline transition-all">
+                Sign In
+              </Link>
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
 };
 
 export default ResetPassword
+

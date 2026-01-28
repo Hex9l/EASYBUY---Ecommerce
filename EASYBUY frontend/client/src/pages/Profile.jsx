@@ -55,8 +55,8 @@ const Profile = () => {
 
       if (responseData.success) {
         toast.success(responseData.message);
-        const userData = await fetchUserDetails();
-        dispatch(setUserDetails(userData));
+        const fetchedDetails = await fetchUserDetails();
+        dispatch(setUserDetails(fetchedDetails));
       }
     } catch (error) {
       AxiosToastError(error);
@@ -66,75 +66,91 @@ const Profile = () => {
   };
 
   return (
-    <div className=' '>
-      {/* Avatar Section */}
-      <div className='w-20 h-20 bg-red-300 flex  items-center justify-center rounded-full overflow-hidden drop-shadow-lg'>
-        {user?.avatar ? (
-          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-        ) : (
-          <FaUserCircle size={70} />
-        )}
+    <div className='min-h-full'>
+      {/* Header */}
+      <div className='sticky top-24 lg:top-20 z-10 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 p-4 px-6 mb-8 rounded-2xl flex items-center justify-between'>
+        <div>
+          <h1 className='font-bold text-xl lg:text-2xl text-gray-800'>My Profile</h1>
+          <p className='text-xs lg:text-sm text-gray-500 mt-1'>Update your personal information</p>
+        </div>
       </div>
 
-      <button
-        onClick={() => setOpenProfilavatrEdit(true)}  // ✅ fixed
-        className='min-w-20 text-sm bg-green-600 h-8 gap-2 items-center justify-center flex flex-row rounded-full mt-4 hover:bg-green-700'
-      >
-        <MdEdit size={20} className='text-white ' />
-      </button>
-
-      {openProfilavatrEdit && (
-        <UserProfileAvatarEdit close={() => setOpenProfilavatrEdit(false)} />
-      )}
-
-      {/* Profile Form */}
-      <form className='grid gap-4' onSubmit={handleSubmit}>
-        <div className='grid mt-7'>
-          <label htmlFor='name' className='text-sm font-semibold'>Name</label>
-          <input
-            type="text"
-            value={userData.name}
-            placeholder='Enter your name'
-            className='h-10 border border-gray-200 focus:outline-none hover:bg-gray-100 rounded-md px-3 mt-1'
-            onChange={handleOnChange}
-            name='name'
-            required
-          />
+      <div className='max-w-2xl bg-white p-6 lg:p-8 rounded-3xl shadow-sm border border-gray-100'>
+        {/* Avatar Section */}
+        <div className='flex flex-col items-center mb-8'>
+          <div className='relative group'>
+            <div className='w-24 h-24 lg:w-32 lg:h-32 bg-gray-100 flex items-center justify-center rounded-full overflow-hidden border-4 border-white shadow-xl'>
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                <FaUserCircle size={100} className='text-gray-300' />
+              )}
+            </div>
+            <button
+              onClick={() => setOpenProfilavatrEdit(true)}
+              className='absolute bottom-1 right-1 bg-green-600 p-2.5 rounded-full text-white shadow-lg hover:bg-green-700 transition-all active:scale-95'
+            >
+              <MdEdit size={18} />
+            </button>
+          </div>
         </div>
 
-        <div className='grid'>
-          <label htmlFor='email' className='text-sm font-semibold'>Email</label>
-          <input
-            type="email"
-            value={userData.email}
-            placeholder='Enter your email'
-            className='h-10 border border-gray-300 focus:outline-none hover:bg-gray-100 rounded-md px-3 mt-1'
-            onChange={handleOnChange}
-            name='email'
-            required
-          />
-        </div>
+        {openProfilavatrEdit && (
+          <UserProfileAvatarEdit close={() => setOpenProfilavatrEdit(false)} />
+        )}
 
-        <div className='grid'>
-          <label htmlFor='mobile' className='text-sm font-semibold'>Mobile</label> {/* ✅ fixed */}
-          <input
-            type="text"
-            value={userData.mobile}
-            placeholder='Enter your mobile number'
-            className='h-10 border border-gray-300 focus:outline-none hover:bg-gray-100 rounded-md px-3 mt-1'
-            onChange={handleOnChange}
-            name='mobile'
-            required
-          />
-        </div>
+        {/* Profile Form */}
+        <form className='grid gap-6' onSubmit={handleSubmit}>
+          <div className='grid gap-1.5'>
+            <label htmlFor='name' className='text-sm font-bold text-gray-700 ml-1'>Full Name</label>
+            <input
+              type="text"
+              id='name'
+              value={userData.name}
+              placeholder='Enter your name'
+              className='h-12 border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all'
+              onChange={handleOnChange}
+              name='name'
+              required
+            />
+          </div>
 
-        <button
+          <div className='grid gap-1.5'>
+            <label htmlFor='email' className='text-sm font-bold text-gray-700 ml-1'>Email Address</label>
+            <input
+              type="email"
+              id='email'
+              value={userData.email}
+              placeholder='Enter your email'
+              className='h-12 border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all'
+              onChange={handleOnChange}
+              name='email'
+              required
+            />
+          </div>
 
-          className='bg-yellow-400 text-white text-xs md:text-base py-2 md:py-3 mt-2 mx-auto w-1/2 transition-colors duration-200 rounded-2xl md:rounded-3xl shadow-md font-semibold hover:bg-yellow-500' >
-          {loading ? "Loading..." : "Update Profile"}
+          <div className='grid gap-1.5'>
+            <label htmlFor='mobile' className='text-sm font-bold text-gray-700 ml-1'>Mobile Number</label>
+            <input
+              type="text"
+              id='mobile'
+              value={userData.mobile}
+              placeholder='Enter your mobile number'
+              className='h-12 border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all'
+              onChange={handleOnChange}
+              name='mobile'
+              required
+            />
+          </div>
 
-        </button>
-      </form>
+          <button
+            disabled={loading}
+            className='bg-[#00b050] hover:bg-[#009040] text-white py-3.5 mt-4 w-full md:w-3/4 mx-auto rounded-2xl shadow-lg shadow-green-900/10 font-bold transition-all active:scale-[0.98] flex items-center justify-center'
+          >
+            {loading ? "Updating..." : "Update Profile"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

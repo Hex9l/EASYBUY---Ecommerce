@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { IoIosCloseCircle } from "react-icons/io";
-import uploadImage from "../utils/uploadimage";
+import { IoClose } from "react-icons/io5";
+import uploadImage from "../utils/UploadImage";
 import axios from "axios";
 import { SummaryApi } from "../common/SummaryApi";
 import AxiosToastError from "../utils/AxiosToastError";
@@ -9,13 +9,16 @@ import { toast } from "react-toastify";
 
 
 
+
 function UploadCategoryModel({ close, fetchData }) {
-  
+
   const [data, setData] = useState({
     name: "",
     image: ""
   });
   const [loading, setloading] = useState(false);
+  // Add loading state for image upload specifically
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
 
   const handleOnChange = (e) => {
@@ -25,150 +28,199 @@ function UploadCategoryModel({ close, fetchData }) {
 
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    setloading(true);
-
-    const response = await axios({
-      ...SummaryApi.addCategory,
-      data: { name: data.name, image: data.image },
-      withCredentials: true,
-    });
-
-    const responseData = response.data;
-
-    if (responseData?.success) {
-      toast.success(responseData?.message || "Category created successfully"); // ✅
-      close();
-      fetchData();
-    } else {
-      toast.error(responseData?.message || "Failed to create category"); // ✅
+    // Double check to prevent submission during upload
+    if (isImageUploading) {
+        toast.warning("Please wait for image upload to complete.");
+        return;
     }
-  } catch (error) {
-    AxiosToastError(error); // ✅
-  } finally {
-    setloading(false);
-  }
-};
+
+
+    try {
+      setloading(true);
+
+      console.log("Submitting Category Data:", { name: data.name, image: data.image }); // DEBUG LOG
+
+      const response = await axios({
+        ...SummaryApi.addCategory,
+        data: { name: data.name, image: data.image },
+        withCredentials: true,
+      });
+
+      const responseData = response.data;
+      console.log("Add Category Response:", responseData); // DEBUG LOG
+
+      if (responseData?.success) {
+        toast.success(responseData?.message || "Category created successfully"); // ✅
+        close();
+        fetchData();
+      } else {
+        toast.error(responseData?.message || "Failed to create category"); // ✅
+      }
+    } catch (error) {
+      AxiosToastError(error); // ✅
+    } finally {
+      setloading(false);
+    }
+  };
 
 
 
-const handleUploadCategoryImage = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  const handleUploadCategoryImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const localPreview = URL.createObjectURL(file);
-  setData((prev) => ({ ...prev, image: localPreview }));
+    // Auto-set Category Name from filename (without extension) if empty
+    const imageName = file.name.split('.').slice(0, -1).join('.');
+    
+    // Set loading state
+    setIsImageUploading(true);
+    
+    // Show local preview immediately
+    const localPreview = URL.createObjectURL(file);
+    setData((prev) => ({
+      ...prev,
+      image: localPreview,
+      // Only set name if it's currently empty to avoid overwriting user input
+      name: prev.name ? prev.name : imageName 
+    }));
 
-  try {
-    const response = await uploadImage(file);
-    const uploadedUrl = response?.imageUrl;
+    try {
+      const response = await uploadImage(file);
+      const uploadedUrl = response?.data?.url || response?.imageUrl || response?.data?.imageUrl; // Handle various response structures just in case, though based on controller it's imageUrl
+      
+      // Based on controller: return res.status(200).json({ ..., imageUrl: ... })
+      // Based on uploadImage util: returns response.data directly.
+      // So response should be { message, imageUrl, success, error }
+      
+      const verifiedUrl = response?.imageUrl;
 
-    if (!uploadedUrl) throw new Error("Upload URL not found in response");
+      if (!verifiedUrl) {
+         throw new Error("Upload URL not found in response");
+      }
 
-    setData((prev) => ({ ...prev, image: uploadedUrl }));
-    toast.success("Image uploaded successfully!"); // ✅
-  } catch (err) {
-    console.error("Image upload failed:", err);
-    toast.error("Image upload failed"); // ✅
-  }
-};
+      setData((prev) => ({ ...prev, image: verifiedUrl }));
+      // toast.success("Image uploaded successfully!"); // Optional: might be too noisy
+    } catch (err) {
+      console.error("Image upload failed:", err);
+      toast.error("Image upload failed");
+    } finally {
+        setIsImageUploading(false);
+    }
+  };
 
-  
 
+  // Disable if: 
+  // 1. Name is empty
+  // 2. Image is empty
+  // 3. Main form loading is true
+  // 4. Image is currently uploading
+  const isDisabled = !data.name.trim() || !data.image.trim() || loading || isImageUploading;
 
-  const isDisabled = !data.name.trim() || !data.image.trim();
 
   return (
-    <section className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-3 sm:px-4">
-      <div className="w-full max-w-sm sm:max-w-md bg-white p-4 sm:p-6 rounded-lg shadow-lg">
+    <section
+      onClick={close}
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl p-8 animate-scaleIn relative overflow-hidden"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between border-b pb-2 mb-4">
-          <h1 className="text-base sm:text-lg font-semibold text-gray-800">
-            Add Category
-          </h1>
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50">
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Add New Category</h2>
+            <p className="text-gray-400 text-sm font-medium">Create a new category for your store</p>
+          </div>
           <button
             onClick={close}
-            aria-label="Close"
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-2xl transition-all"
           >
-            <IoIosCloseCircle size={28} />
+            <IoClose size={28} />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-
+        <form onSubmit={handleSubmit} className="space-y-8">
           {/* Category Name */}
-          <div className="grid gap-1.5">
-            <label
-              htmlFor="categoryName"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-extrabold text-gray-400 uppercase tracking-widest px-1">
               Category Name
             </label>
             <input
-              id="categoryName"
-              name="name"
               type="text"
-              placeholder="Enter category name"
+              name="name"
               value={data.name}
               onChange={handleOnChange}
-              required
-              className="w-full p-2.5 sm:p-3 rounded-md border border-gray-300 bg-gray-100 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm transition-all"
+              placeholder="e.g. Fresh Vegetables"
+              className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-[#00b050] focus:bg-white focus:ring-4 focus:ring-[#00b050]/10 rounded-[1.5rem] outline-none transition-all font-bold text-gray-800 placeholder:text-gray-300"
             />
           </div>
 
           {/* Category Image */}
-          <div className="grid gap-1.5">
-            <label
-              htmlFor="categoryImage"
-              className="text-sm font-medium text-gray-700"
-            >
-              Category Image 
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-extrabold text-gray-400 uppercase tracking-widest px-1">
+              Category Image
             </label>
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <input
-                id="categoryImage"
-                type="file"
-                accept="image/*"
-                onChange={handleUploadCategoryImage}
-                className="block  text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none file:mr-2 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all"
-              />
+            <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-[2rem] border-2 border-dashed border-gray-200 hover:border-[#00b050]/30 transition-colors group">
+              <div className="w-28 h-28 shrink-0 rounded-[1.5rem] bg-white shadow-sm flex items-center justify-center overflow-hidden border border-gray-100 group-hover:scale-105 transition-transform duration-500">
+                {data.image ? (
+                  <img
+                    src={data.image}
+                    alt="category"
+                    className="w-full h-full object-contain p-2"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
+                        <span className="text-gray-300 text-[10px] font-black">?</span>
+                    </div>
+                  </div>
+                )}
+              </div>
 
-              {data.image ? (
-                <img
-                  src={data.image}
-                  alt="Preview"
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-md object-contain border border-gray-300"
-                />
-              ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center rounded-md bg-gray-100 border border-gray-300 text-gray-400 text-xs">
-                  No Image
-                </div>
-              )}
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-gray-500 font-medium leading-tight">
+                    {data.image ? "Change existing image" : "Upload a clean, high-quality PNG or JPG image for this category"}
+                </p>
+                <label className="cursor-pointer group/btn">
+                  <div className={`px-6 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all flex items-center gap-2 ${
+                    (loading || isImageUploading) 
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                    : "bg-white text-[#00b050] border-2 border-[#00b050]/20 hover:border-[#00b050] hover:bg-[#00b050]/5"
+                  }`}>
+                    {isImageUploading ? "Uploading..." : "SELECT IMAGE"}
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    disabled={loading || isImageUploading}
+                    onChange={handleUploadCategoryImage}
+                  />
+                </label>
+              </div>
             </div>
           </div>
 
           {/* Submit Button */}
-
           <button
-            type="submit"
             disabled={isDisabled}
-            className={`w-full py-2.5 rounded-md text-white text-sm font-medium transition-colors ${isDisabled
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-              }`}
+            className={`w-full py-5 rounded-[1.5rem] font-black text-lg tracking-tight transition-all shadow-xl ${
+              isDisabled
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
+                : "bg-[#00b050] text-white hover:bg-[#00b060] shadow-[#00b050]/30 active:scale-[0.98]"
+            }`}
           >
-            Upload Category
+            {loading ? "CREATING..." : "PUBLISH CATEGORY"}
           </button>
-
         </form>
       </div>
     </section>
   );
+
 }
 
 export default UploadCategoryModel;
