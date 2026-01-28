@@ -1,13 +1,14 @@
 import sendEmail from '../config/sendEmail.js';
 import bcrypt from 'bcryptjs';
 import verifyEmailTemplate from '../utils/verifyEmailTemplet.js';
-import UserModel from '../model/user.model.js';
+
 import generatedAccessToken from '../utils/generatedAccessToken.js';
 import generatedRefreshToken from '../utils/generatedRefreshToken.js';
 import uploadImageCloudinary from '../utils/uploadimageCloudinary.js';
 import generatedOtp from '../utils/generatedOtp.js';
 import forgotPasswordTemplet from '../utils/forgotPasswordTemplet.js';
 import jwt from 'jsonwebtoken';
+import UserModel from '../model/user.model.js';
 
 
 // register user controller
@@ -47,7 +48,7 @@ export async function registerUserController(request, response) {
         const save = await newUser.save();
 
         const verifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save?._id}`;
-        
+
         console.log('Verification URL:', verifyEmailUrl);
 
         const verifyEmail = await sendEmail({
@@ -167,8 +168,8 @@ export async function loginController(request, response) {
 
         const cookieOptions = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'lax' is better for localhost http
         };
 
         response.cookie('accessToken', accessToken, cookieOptions)
@@ -208,8 +209,14 @@ export async function logoutController(request, response) {
             });
         }
 
-        response.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'none' });
-        response.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'none' });
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        };
+
+        response.clearCookie('accessToken', cookieOptions);
+        response.clearCookie('refreshToken', cookieOptions);
 
 
         const removeRefreshToken = await UserModel.findByIdAndUpdate(Userid, { refresh_token: "" });
@@ -307,55 +314,66 @@ export async function uploadUserAvatarController(request, response) {
 }
 
 
+
 // update user details controller
 
 export async function updateUserDetailsController(request, response) {
-  try {
-    const Userid = request.Userid; // coming from auth middleware
-    const { name, email, mobile, password } = request.body;
+    try {
+        const Userid = request.Userid; // coming from auth middleware
+        const { name, email, mobile, password } = request.body;
 
-    const updateFields = {};
+        const updateFields = {};
 
-    if (name) updateFields.name = name;
-    if (email) updateFields.email = email;
-    if (mobile) updateFields.mobile = mobile;
+        if (name) updateFields.name = name;
+        if (email) {
+            const existingUser = await UserModel.findOne({ email });
+            if (existingUser && existingUser._id.toString() !== Userid) {
+                return response.status(400).json({
+                    message: "Email already in use",
+                    error: true,
+                    success: false
+                });
+            }
+            updateFields.email = email;
+        }
+        if (mobile) updateFields.mobile = mobile;
 
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      updateFields.password = hashedPassword;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            updateFields.password = hashedPassword;
+        }
+
+        // 🔹 Use findByIdAndUpdate to get updated document
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            Userid,
+            { $set: updateFields },
+            { new: true, select: "-password" } // exclude password from response
+        );
+
+        if (!updatedUser) {
+            return response.status(404).json({
+                message: "User not found",
+                error: true,
+                success: false,
+            });
+        }
+
+        return response.json({
+            message: "User details updated successfully",
+            error: false,
+            success: true,
+            data: updatedUser,
+        });
+
+    } catch (error) {
+        console.error("Error in updateUserDetailsController:", error);
+        return response.status(500).json({
+            message: error.message || "Internal Server Error",
+            error: true,
+            success: false,
+        });
     }
-
-    // 🔹 Use findByIdAndUpdate to get updated document
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      Userid,
-      { $set: updateFields },
-      { new: true, select: "-password" } // exclude password from response
-    );
-
-    if (!updatedUser) {
-      return response.status(404).json({
-        message: "User not found",
-        error: true,
-        success: false,
-      });
-    }
-
-    return response.json({
-      message: "User details updated successfully",
-      error: false,
-      success: true,
-      data: updatedUser,
-    });
-
-  } catch (error) {
-    console.error("Error in updateUserDetailsController:", error);
-    return response.status(500).json({
-      message: error.message || "Internal Server Error",
-      error: true,
-      success: false,
-    });
-  }
 }
 
 // forgot password not login controller
@@ -470,7 +488,7 @@ export async function verifyForgotPasswordOtpController(request, response) {
             success: true,
         })
     }
-    
+
     catch (error) {
         console.error('Error in verifyForgotPasswordOtpController:', error);
         return response.status(500).json({
@@ -568,8 +586,8 @@ export async function refreshTokenController(request, response) {
 
         const cookieOptions = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         };
 
         response.cookie('accessToken', newaccessToken, cookieOptions);
@@ -606,7 +624,7 @@ export async function getLoginUserDetailsController(request, response) {
         }
 
         const user = await UserModel.findById(Userid)
-        .select('-password -refresh_token');
+            .select('-password -refresh_token');
 
         if (!user) {
             return response.status(404).json({
@@ -632,3 +650,5 @@ export async function getLoginUserDetailsController(request, response) {
         });
     }
 }
+
+

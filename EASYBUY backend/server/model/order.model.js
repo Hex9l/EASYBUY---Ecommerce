@@ -8,7 +8,7 @@ const orderSchema = new mongoose.Schema({
     orderId: {
         type: String,
         required: [true, "provide orderId"],
-        unique: true,
+        unique: false,
     },
     productId: {
         type: mongoose.Schema.ObjectId,
@@ -16,17 +16,17 @@ const orderSchema = new mongoose.Schema({
     },
     product_details: {
         name: String,
-        Image: Array,
+        image: Array,
     },
     paymentId: {
         type: String,
-        required: "",
+        default: "",
     },
     payment_status: {
         type: String,
         default: "",
     },
-    delevery_address: {
+    delivery_address: {
         type: mongoose.Schema.ObjectId,
         ref: "Address",
     },
@@ -41,6 +41,10 @@ const orderSchema = new mongoose.Schema({
     invoice_receipt: {
         type: String,
         default: "",
+    },
+    quantity: {
+        type: Number,
+        default: 1
     }
 }, {
     timestamps: true,
