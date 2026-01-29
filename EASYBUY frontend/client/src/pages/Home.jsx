@@ -29,60 +29,65 @@ const Home = () => {
 
 
   return (
-    <section className='bg-white'>
-      <div className='container mx-auto'>
+    <section className='bg-white dark:bg-gray-900'>
+      <div className='container my-3'>
         <div
-          className={`w-full h-full min-h-32 md:min-h-48 bg-blue-100 rounded cursor-pointer overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-green-200/50 group ${!banner && "animate-pulse my-2"}`}
+          className={`w-full h-full min-h-32 md:min-h-48 bg-white dark:bg-gray-900 rounded-xl cursor-pointer overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-green-200/50 dark:hover:shadow-green-900/30 group ${!banner && "animate-pulse"}`}
 
         >
           <img
             src={banner}
-            className='w-full h-full hidden lg:block group-hover:scale-[1.02] transition-transform duration-700'
+            className='w-full h-full hidden lg:block group-hover:scale-[1.02] transition-transform duration-700 object-cover'
             alt='banner'
             onClick={() => {
               const paanCorner = categoryData.find(c => c.name.toLowerCase().includes("paan corner"));
               if (paanCorner) {
                 handleRedirectProductListpage(paanCorner._id, paanCorner.name);
+              } else {
+                console.warn("Paan Corner category not found");
               }
             }}
           />
           <img
             src={bannerMobile}
-            className='w-full h-full lg:hidden group-hover:scale-[1.02] transition-transform duration-700 object-cover min-h-[130px]'
+            className='w-full h-full lg:hidden group-hover:scale-[1.02] transition-transform duration-700 object-cover min-h-[140px]'
             alt='banner'
           />
         </div>
       </div>
 
-      <div className='container mx-auto px-2 md:px-4 my-2 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2'>
-        {
-          loadingCategory ? (
-            new Array(12).fill(null).map((c, index) => {
-              return (
-                <div key={index + "loadingcategory"} className='bg-white rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
-                  <div className='bg-blue-100 min-h-24 rounded'></div>
-                  <div className='bg-blue-100 h-8 rounded'></div>
-                </div>
-              )
-            })
-          ) : (
-            categoryData.map((cat, index) => {
-              return (
-                <div key={cat._id + "displayCategory"} className='w-full h-full cursor-pointer group bg-gray-50 group-hover:bg-white rounded-3xl p-3 shadow-sm group-hover:shadow-xl border border-gray-100 group-hover:border-green-100 transition-all duration-300 transform group-hover:-translate-y-1 flex flex-col items-center justify-center gap-2' onClick={() => handleRedirectProductListpage(cat._id, cat.name)}>
-                  <div className='w-full h-16 md:h-20 lg:h-24 overflow-hidden flex items-center justify-center'>
-                    <img
-                      src={cat.image}
-                      className='w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-300'
-                      alt={cat.name}
-                    />
+      <div className='container my-6'>
+        <div className='grid grid-cols-2 min-[450px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8 gap-3 sm:gap-4'>
+          {
+            loadingCategory ? (
+              new Array(12).fill(null).map((c, index) => {
+                return (
+                  <div key={index + "loadingcategory"} className='bg-white dark:bg-gray-800 rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
+                    <div className='bg-blue-100 dark:bg-gray-700 min-h-24 rounded'></div>
+                    <div className='bg-blue-100 dark:bg-gray-700 h-8 rounded'></div>
                   </div>
-                  <p className='text-center text-xs lg:text-sm font-medium text-gray-600 group-hover:text-green-700 capitalize leading-tight transition-colors duration-300 tracking-wide'>{cat.name}</p>
-                </div>
-              )
-            })
+                )
+              })
+            ) : (
+              categoryData.map((cat, index) => {
+                return (
+                  <div key={cat._id + "displayCategory"} className='w-full cursor-pointer group bg-gray-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 rounded-xl p-3 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-700 hover:border-green-100 dark:hover:border-green-600 transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center justify-center gap-2' onClick={() => handleRedirectProductListpage(cat._id, cat.name)}>
+                    <div className='w-full h-16 md:h-20 lg:h-24 overflow-hidden flex items-center justify-center'>
+                      <img
+                        src={cat.image}
+                        className='w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal group-hover:scale-110 transition-transform duration-300'
+                        alt={cat.name}
+                      />
+                    </div>
+                    <p className='text-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-green-700 dark:group-hover:text-green-500 capitalize leading-tight transition-colors duration-300'>{cat.name}</p>
+                  </div>
+                )
+              })
 
-          )
-        }
+
+            )
+          }
+        </div>
       </div>
 
       {/***display category product */}

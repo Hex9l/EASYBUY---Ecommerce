@@ -66,7 +66,7 @@ const CheckoutPage = () => {
   }
 
   return (
-    <section className='bg-gray-50 min-h-[calc(100vh-132px)] py-8'>
+    <section className='bg-gray-50 dark:bg-gray-900 min-h-[calc(100vh-132px)] py-8 transition-colors duration-300'>
       <div className='container mx-auto px-4'>
         {showPayment ? (
           <PaymentMethods
@@ -78,7 +78,7 @@ const CheckoutPage = () => {
 
             {/* Left Side - Address Selection */}
             <div className='flex-1 w-full'>
-              <h2 className='text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2'>
+              <h2 className='text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center gap-2'>
                 <FaMapMarkerAlt className='text-green-600' />
                 Choose delivery address
               </h2>
@@ -93,8 +93,8 @@ const CheckoutPage = () => {
                       key={address._id || index}
                       htmlFor={"address" + index}
                       className={`relative group cursor-pointer border-2 rounded-2xl p-5 transition-all duration-300 ${selectAddress == index
-                        ? 'border-green-600 bg-green-50/30'
-                        : 'border-gray-200 bg-white hover:border-green-200 hover:shadow-md'
+                        ? 'border-green-600 bg-green-50/30 dark:bg-green-900/20'
+                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-green-200 dark:hover:border-green-800 hover:shadow-md'
                         } ${!address.status && "hidden"}`}
                     >
                       <input
@@ -108,8 +108,8 @@ const CheckoutPage = () => {
                       />
 
                       <div className='flex justify-between items-start mb-3'>
-                        <div className='p-2 bg-gray-100 rounded-lg group-hover:bg-green-100 transition-colors'>
-                          <FaMapMarkerAlt className={selectAddress == index ? 'text-green-600' : 'text-gray-500 group-hover:text-green-600'} />
+                        <div className='p-2 bg-gray-100 dark:bg-gray-700 rounded-lg group-hover:bg-green-100 dark:group-hover:bg-green-900/30 transition-colors'>
+                          <FaMapMarkerAlt className={selectAddress == index ? 'text-green-600' : 'text-gray-500 dark:text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400'} />
                         </div>
                         {selectAddress == index && (
                           <motion.div
@@ -123,12 +123,12 @@ const CheckoutPage = () => {
                       </div>
 
                       <div className='space-y-1'>
-                        <p className='font-semibold text-gray-800 leading-tight'>{address.address_line}</p>
-                        <p className='text-sm text-gray-600'>{address.city}, {address.state}</p>
-                        <p className='text-sm text-gray-600 font-medium'>{address.country} - {address.pincode}</p>
-                        <div className='flex items-center gap-2 mt-3 pt-3 border-t border-gray-100'>
-                          <FaPhoneAlt size={12} className='text-gray-400' />
-                          <p className='text-sm text-gray-700 font-medium'>{address.mobile}</p>
+                        <p className='font-semibold text-gray-800 dark:text-gray-100 leading-tight'>{address.address_line}</p>
+                        <p className='text-sm text-gray-600 dark:text-gray-400'>{address.city}, {address.state}</p>
+                        <p className='text-sm text-gray-600 dark:text-gray-400 font-medium'>{address.country} - {address.pincode}</p>
+                        <div className='flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700'>
+                          <FaPhoneAlt size={12} className='text-gray-400 dark:text-gray-500' />
+                          <p className='text-sm text-gray-700 dark:text-gray-300 font-medium'>{address.mobile}</p>
                         </div>
                       </div>
 
@@ -147,9 +147,9 @@ const CheckoutPage = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setOpenAddress(true)}
-                  className='h-full min-h-[160px] border-2 border-dashed border-gray-300 rounded-2xl flex flex-col justify-center items-center gap-3 cursor-pointer bg-white text-gray-500 hover:border-green-500 hover:text-green-600 transition-all duration-300'
+                  className='h-full min-h-[160px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl flex flex-col justify-center items-center gap-3 cursor-pointer bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:border-green-500 dark:hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300'
                 >
-                  <div className='w-12 h-12 rounded-full bg-gray-50 flex justify-center items-center'>
+                  <div className='w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-700 flex justify-center items-center'>
                     <FaPlus size={20} />
                   </div>
                   <span className='font-semibold'>Add new address</span>
@@ -159,34 +159,34 @@ const CheckoutPage = () => {
 
             {/* Right Side - Summary */}
             <div className='w-full lg:max-w-md'>
-              <div className='bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden sticky top-30'>
-                <div className='p-6 bg-gray-50 border-b border-gray-100'>
-                  <h3 className='text-xl font-bold text-gray-800'>Order Summary</h3>
+              <div className='bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden sticky top-30 transition-colors duration-300'>
+                <div className='p-6 bg-gray-50 dark:bg-gray-700/50 border-b border-gray-100 dark:border-gray-700'>
+                  <h3 className='text-xl font-bold text-gray-800 dark:text-gray-100'>Order Summary</h3>
                 </div>
 
                 <div className='p-6 space-y-4'>
                   <div className='space-y-3'>
-                    <div className='flex justify-between items-center text-gray-600'>
+                    <div className='flex justify-between items-center text-gray-600 dark:text-gray-400'>
                       <span>Items total ({totalQty})</span>
                       <div className='flex items-center gap-2'>
-                        <span className='line-through text-xs text-gray-400'>{DisplayPriceInRupees(notDiscountTotalPrice)}</span>
-                        <span className='font-medium text-gray-900'>{DisplayPriceInRupees(totalPrice)}</span>
+                        <span className='line-through text-xs text-gray-400 dark:text-gray-500'>{DisplayPriceInRupees(notDiscountTotalPrice)}</span>
+                        <span className='font-medium text-gray-900 dark:text-white'>{DisplayPriceInRupees(totalPrice)}</span>
                       </div>
                     </div>
-                    <div className='flex justify-between items-center text-gray-600'>
+                    <div className='flex justify-between items-center text-gray-600 dark:text-gray-400'>
                       <span>Delivery Charge</span>
-                      <span className='text-green-600 font-bold uppercase text-xs tracking-wider'>Free</span>
+                      <span className='text-green-600 dark:text-green-400 font-bold uppercase text-xs tracking-wider'>Free</span>
                     </div>
-                    <div className='flex justify-between items-center text-gray-600'>
+                    <div className='flex justify-between items-center text-gray-600 dark:text-gray-400'>
                       <span>Handling Charge</span>
-                      <p>{DisplayPriceInRupees(handlingCharge)}</p>
+                      <p className='text-gray-900 dark:text-white'>{DisplayPriceInRupees(handlingCharge)}</p>
                     </div>
                   </div>
 
-                  <div className='pt-4 border-t border-gray-100'>
+                  <div className='pt-4 border-t border-gray-100 dark:border-gray-700'>
                     <div className='flex justify-between items-center'>
-                      <span className='text-lg font-bold text-gray-800'>Grand total</span>
-                      <span className='text-2xl font-black text-green-600'>{DisplayPriceInRupees(totalAmt)}</span>
+                      <span className='text-lg font-bold text-gray-800 dark:text-gray-100'>Grand total</span>
+                      <span className='text-2xl font-black text-green-600 dark:text-green-500'>{DisplayPriceInRupees(totalAmt)}</span>
                     </div>
                   </div>
 
@@ -194,7 +194,7 @@ const CheckoutPage = () => {
                     <motion.button
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className='w-full py-4 bg-green-600 hover:bg-green-700 rounded-2xl text-white font-bold shadow-lg shadow-green-200 transition-all flex items-center justify-center gap-2'
+                      className='w-full py-4 bg-green-600 hover:bg-green-700 dark:hover:bg-green-500 rounded-2xl text-white font-bold shadow-lg shadow-green-200 dark:shadow-green-900/30 transition-all flex items-center justify-center gap-2'
                       onClick={handleOnlinePayment}
                     >
                       <FaCreditCard />
@@ -204,14 +204,14 @@ const CheckoutPage = () => {
                     <motion.button
                       whileHover={{ y: -2 }}
                       whileTap={{ scale: 0.98 }}
-                      className='w-full py-4 border-2 border-green-600 rounded-2xl text-green-600 font-bold hover:bg-green-50 transition-all flex items-center justify-center gap-2'
+                      className='w-full py-4 border-2 border-green-600 rounded-2xl text-green-600 dark:text-green-400 font-bold hover:bg-green-50 dark:hover:bg-green-900/20 transition-all flex items-center justify-center gap-2'
                       onClick={handleCashOnDelivery}
                     >
                       <FaMoneyBillWave />
                       Cash on Delivery
                     </motion.button>
                   </div>
-                  <p className='text-center text-xs text-gray-400 mt-4'>
+                  <p className='text-center text-xs text-gray-400 dark:text-gray-500 mt-4'>
                     By placing this order, you agree to our Terms and Conditions
                   </p>
                 </div>

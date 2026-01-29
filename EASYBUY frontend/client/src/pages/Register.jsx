@@ -59,10 +59,10 @@ const Register = () => {
   };
 
   return (
-    <section className="min-h-[90vh] w-full flex items-center justify-center px-4 relative overflow-hidden bg-slate-50 py-10">
+    <section className="min-h-[90vh] w-full flex items-center justify-center px-4 relative overflow-hidden bg-slate-50 dark:bg-gray-900 py-10 transition-colors duration-300">
       {/* Animated Background Elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-green-100 rounded-full blur-3xl opacity-50 animate-pulse" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50 animate-pulse delay-700" />
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-green-100 dark:bg-green-900/20 rounded-full blur-3xl opacity-50 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 animate-pulse delay-700" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -70,17 +70,17 @@ const Register = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="bg-white/80 backdrop-blur-xl border border-white/40 p-4 md:p-8 rounded-[2.5rem] shadow-2xl shadow-green-900/10">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/40 dark:border-gray-700 p-4 md:p-8 rounded-[2.5rem] shadow-2xl shadow-green-900/10 dark:shadow-black/30">
           {/* Header */}
           <div className="text-center mb-8">
             <motion.h1
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              className="text-3xl font-bold text-gray-800"
+              className="text-3xl font-bold text-gray-800 dark:text-white"
             >
               Join <span className="text-green-600">EASYBUY</span>
             </motion.h1>
-            <p className="text-gray-500 mt-2 text-sm">Create your account to start shopping.</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">Create your account to start shopping.</p>
           </div>
 
           {/* Form */}
@@ -90,7 +90,7 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">
+              <label htmlFor="name" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
                 Full Name
               </label>
               <input
@@ -101,7 +101,7 @@ const Register = () => {
                 value={data.name}
                 onChange={handleChange}
                 placeholder="John Doe"
-                className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 placeholder:text-gray-400"
+                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </motion.div>
 
@@ -110,7 +110,7 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
                 Email Address
               </label>
               <input
@@ -120,7 +120,7 @@ const Register = () => {
                 value={data.email}
                 onChange={handleChange}
                 placeholder="name@example.com"
-                className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 placeholder:text-gray-400"
+                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
               />
             </motion.div>
 
@@ -129,7 +129,7 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
                 Password
               </label>
               <div className="relative">
@@ -140,7 +140,7 @@ const Register = () => {
                   value={data.password}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 placeholder:text-gray-400"
+                  className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
                 <button
                   type="button"
@@ -157,7 +157,7 @@ const Register = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
                 Confirm Password
               </label>
               <div className="relative">
@@ -168,7 +168,7 @@ const Register = () => {
                   value={data.confirmPassword}
                   onChange={handleChange}
                   placeholder="••••••••"
-                  className="w-full px-5 py-3.5 bg-gray-50/50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 placeholder:text-gray-400"
+                  className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
                 <button
                   type="button"
@@ -189,7 +189,7 @@ const Register = () => {
                 transition-all duration-300 flex items-center justify-center gap-2 mt-2
                 ${validValue
                   ? "bg-gradient-to-r from-green-600 to-green-500 hover:shadow-green-600/40"
-                  : "bg-gray-400 cursor-not-allowed"}
+                  : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"}
               `}
             >
               Create Account
@@ -198,7 +198,7 @@ const Register = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               Already have an account?{" "}
               <Link to="/login" className="text-green-600 font-bold hover:underline transition-all">
                 Sign In

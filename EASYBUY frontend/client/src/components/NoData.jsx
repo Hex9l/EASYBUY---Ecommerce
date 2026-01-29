@@ -70,7 +70,7 @@ const NoData = () => {
             />
 
             {/* Text animation */}
-            <p className="text-center mt-4 text-gray-600 text-lg font-semibold animate-fadeIn">
+            <p className="text-center mt-4 text-gray-600 dark:text-gray-400 text-lg font-semibold animate-fadeIn">
                 No Data
             </p>
         </div>

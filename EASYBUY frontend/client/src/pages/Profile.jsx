@@ -68,22 +68,22 @@ const Profile = () => {
   return (
     <div className='min-h-full'>
       {/* Header */}
-      <div className='sticky top-24 lg:top-20 z-10 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 p-4 px-6 mb-8 rounded-2xl flex items-center justify-between'>
+      <div className='sticky top-24 lg:top-20 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800 p-4 px-6 mb-8 rounded-2xl flex items-center justify-between transition-colors duration-300'>
         <div>
-          <h1 className='font-bold text-xl lg:text-2xl text-gray-800'>My Profile</h1>
-          <p className='text-xs lg:text-sm text-gray-500 mt-1'>Update your personal information</p>
+          <h1 className='font-bold text-xl lg:text-2xl text-gray-800 dark:text-gray-100'>My Profile</h1>
+          <p className='text-xs lg:text-sm text-gray-500 dark:text-gray-400 mt-1'>Update your personal information</p>
         </div>
       </div>
 
-      <div className='max-w-2xl bg-white p-6 lg:p-8 rounded-3xl shadow-sm border border-gray-100'>
+      <div className='max-w-2xl bg-white dark:bg-gray-800 p-6 lg:p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 transition-colors duration-300'>
         {/* Avatar Section */}
         <div className='flex flex-col items-center mb-8'>
           <div className='relative group'>
-            <div className='w-24 h-24 lg:w-32 lg:h-32 bg-gray-100 flex items-center justify-center rounded-full overflow-hidden border-4 border-white shadow-xl'>
+            <div className='w-24 h-24 lg:w-32 lg:h-32 bg-gray-100 dark:bg-gray-700 flex items-center justify-center rounded-full overflow-hidden border-4 border-white dark:border-gray-600 shadow-xl'>
               {user?.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
               ) : (
-                <FaUserCircle size={100} className='text-gray-300' />
+                <FaUserCircle size={100} className='text-gray-300 dark:text-gray-500' />
               )}
             </div>
             <button
@@ -102,13 +102,13 @@ const Profile = () => {
         {/* Profile Form */}
         <form className='grid gap-6' onSubmit={handleSubmit}>
           <div className='grid gap-1.5'>
-            <label htmlFor='name' className='text-sm font-bold text-gray-700 ml-1'>Full Name</label>
+            <label htmlFor='name' className='text-sm font-bold text-gray-700 dark:text-gray-300 ml-1'>Full Name</label>
             <input
               type="text"
               id='name'
               value={userData.name}
               placeholder='Enter your name'
-              className='h-12 border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all'
+              className='h-12 border border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-700/50 focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500'
               onChange={handleOnChange}
               name='name'
               required
@@ -116,13 +116,13 @@ const Profile = () => {
           </div>
 
           <div className='grid gap-1.5'>
-            <label htmlFor='email' className='text-sm font-bold text-gray-700 ml-1'>Email Address</label>
+            <label htmlFor='email' className='text-sm font-bold text-gray-700 dark:text-gray-300 ml-1'>Email Address</label>
             <input
               type="email"
               id='email'
               value={userData.email}
               placeholder='Enter your email'
-              className='h-12 border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all'
+              className='h-12 border border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-700/50 focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500'
               onChange={handleOnChange}
               name='email'
               required
@@ -130,13 +130,13 @@ const Profile = () => {
           </div>
 
           <div className='grid gap-1.5'>
-            <label htmlFor='mobile' className='text-sm font-bold text-gray-700 ml-1'>Mobile Number</label>
+            <label htmlFor='mobile' className='text-sm font-bold text-gray-700 dark:text-gray-300 ml-1'>Mobile Number</label>
             <input
               type="text"
               id='mobile'
               value={userData.mobile}
               placeholder='Enter your mobile number'
-              className='h-12 border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all'
+              className='h-12 border border-gray-200 dark:border-gray-600 bg-gray-50/50 dark:bg-gray-700/50 focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-green-500/10 focus:border-green-500 focus:outline-none rounded-xl px-4 transition-all text-gray-800 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500'
               onChange={handleOnChange}
               name='mobile'
               required

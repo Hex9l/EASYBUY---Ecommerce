@@ -82,12 +82,12 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     if (!loading && !data.length) return null
 
     return (
-        <section className='container mx-auto pb-6'>
-            <div className='px-4 pt-6 pb-4 flex items-center justify-between'>
-                <h3 className='font-bold text-xl md:text-2xl text-neutral-800 capitalize'>{name}</h3>
+        <section className='container py-6'>
+            <div className='flex items-center justify-between mb-4'>
+                <h3 className='font-bold text-xl md:text-2xl text-gray-800 dark:text-gray-100 capitalize'>{name}</h3>
                 <Link
                     to={handleRedirectProductListpage()}
-                    className='text-green-600 hover:text-green-700 font-bold transition-all hover:translate-x-1 inline-flex items-center gap-1'
+                    className='text-green-600 hover:text-green-700 font-bold transition-all hover:translate-x-1 inline-flex items-center gap-1 text-sm md:text-base'
                 >
                     See All
                 </Link>
@@ -98,21 +98,22 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
                 <button
                     onClick={() => scroll('left')}
                     className={`
-                        absolute left-4 z-20 
-                        bg-white/90 backdrop-blur shadow-xl p-3 rounded-full 
+                        absolute -left-2 z-20 
+                        bg-white dark:bg-gray-800 shadow-lg p-2 rounded-full 
                         transition-all duration-300 
-                        hover:bg-green-600 hover:text-white 
+                        hover:bg-green-600 dark:hover:bg-green-600 hover:text-white 
+                        text-gray-600 dark:text-gray-300
                         hidden lg:flex items-center justify-center
-                        border border-neutral-100
+                        border border-gray-100 dark:border-gray-700
                         active:scale-95
                         ${showLeftArrow ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"}
                     `}
                 >
-                    <FaAngleLeft size={22} />
+                    <FaAngleLeft size={20} />
                 </button>
 
                 <div
-                    className='flex gap-4 md:gap-6 overflow-x-scroll scrollbar-none scroll-smooth px-4 py-2 w-full'
+                    className='flex gap-3 md:gap-5 overflow-x-auto scrollbar-none scroll-smooth pb-2 w-full px-1'
                     ref={containerRef}
                 >
                     {loading ? (
@@ -126,6 +127,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: index * 0.03 }}
+                                className="flex-shrink-0"
                             >
                                 <CardProduct data={p} />
                             </motion.div>
@@ -137,17 +139,18 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
                 <button
                     onClick={() => scroll('right')}
                     className={`
-                        absolute right-4 z-20 
-                        bg-white/90 backdrop-blur shadow-xl p-3 rounded-full 
+                        absolute -right-2 z-20 
+                        bg-white dark:bg-gray-800 shadow-lg p-2 rounded-full 
                         transition-all duration-300 
-                        hover:bg-green-600 hover:text-white 
+                        hover:bg-green-600 dark:hover:bg-green-600 hover:text-white 
+                        text-gray-600 dark:text-gray-300
                         hidden lg:flex items-center justify-center
-                        border border-neutral-100
+                        border border-gray-100 dark:border-gray-700
                         active:scale-95
                         ${showRightArrow ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"}
                     `}
                 >
-                    <FaAngleRight size={22} />
+                    <FaAngleRight size={20} />
                 </button>
             </div>
         </section>

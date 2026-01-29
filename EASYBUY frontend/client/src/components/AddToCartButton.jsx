@@ -214,7 +214,7 @@ const AddToCartButton = ({ data }) => {
         <button
           onClick={handleAdd}
           disabled={loading}
-          className="h-7 w-full rounded-lg border-[1.5px] border-[#0c831f] text-[#0c831f] text-[12px] font-bold bg-white uppercase tracking-wider hover:bg-[#0c831f] hover:text-white transition-all shadow-md active:scale-95 disabled:opacity-70"
+          className="h-7 w-full rounded-lg border-[1.5px] border-[#0c831f] text-[#0c831f] dark:text-green-400 dark:border-green-500 text-[12px] font-bold bg-white dark:bg-gray-800 uppercase tracking-wider hover:bg-[#0c831f] hover:text-white dark:hover:bg-green-600 dark:hover:text-white transition-all shadow-md active:scale-95 disabled:opacity-70"
         >
           {loading ? "Adding..." : "Add"}
         </button>

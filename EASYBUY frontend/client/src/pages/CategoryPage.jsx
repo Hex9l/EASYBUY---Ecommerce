@@ -69,8 +69,8 @@ function CategoryPage() {
 
   return (
     <section className='min-h-full'>
-      <div className='sticky top-24 lg:top-20 z-10 p-4 lg:p-6 bg-white/95 backdrop-blur-md shadow-sm border border-gray-100 rounded-2xl flex items-center justify-between mb-6'>
-        <h2 className='font-bold text-xl lg:text-2xl text-gray-800'>Categories</h2>
+      <div className='sticky top-24 lg:top-20 z-10 p-4 lg:p-6 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm border border-gray-100 dark:border-gray-800 rounded-2xl flex items-center justify-between mb-6 transition-colors duration-300'>
+        <h2 className='font-bold text-xl lg:text-2xl text-gray-800 dark:text-gray-100'>Categories</h2>
         <button
           onClick={() => setOpenUploadCategory(true)}
           className='bg-[#00b050] text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-xl lg:rounded-2xl font-bold shadow-lg shadow-[#00b050]/20 hover:bg-[#00b060] transition-all active:scale-95 text-sm lg:text-base'
@@ -80,18 +80,18 @@ function CategoryPage() {
       </div>
 
       {categoryData.length === 0 && !loading && (
-        <div className='min-h-[60vh] flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border border-gray-100'>
+        <div className='min-h-[60vh] flex flex-col items-center justify-center py-20 bg-white dark:bg-gray-800 rounded-[3rem] border border-gray-100 dark:border-gray-700 transition-colors duration-300'>
           <NoData />
         </div>
       )}
 
-      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-4 lg:gap-6'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6'>
         {categoryData.map((category) => (
           <div
             key={category._id}
-            className='group bg-white p-3 lg:p-4 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300'
+            className='group bg-white dark:bg-gray-800 p-3 lg:p-4 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl hover:translate-y-[-4px] transition-all duration-300'
           >
-            <div className='h-24 lg:h-32 w-full mb-3 lg:mb-4 flex items-center justify-center bg-gray-50/50 rounded-2xl lg:rounded-3xl overflow-hidden group-hover:bg-[#00b050]/5 transition-colors duration-500'>
+            <div className='h-24 lg:h-32 w-full mb-3 lg:mb-4 flex items-center justify-center bg-gray-50/50 dark:bg-gray-700/50 rounded-2xl lg:rounded-3xl overflow-hidden group-hover:bg-[#00b050]/5 dark:group-hover:bg-[#00b050]/10 transition-colors duration-500'>
               <img
                 src={category.image || fallbackImage}
                 alt={category.name}
@@ -100,7 +100,7 @@ function CategoryPage() {
             </div>
 
             <div className='px-1 mb-3 lg:mb-4'>
-              <h3 className='font-bold text-gray-800 text-center truncate text-sm lg:text-[15px]' title={category.name}>
+              <h3 className='font-bold text-gray-800 dark:text-gray-200 text-center truncate text-sm lg:text-[15px]' title={category.name}>
                 {category.name}
               </h3>
             </div>
@@ -111,7 +111,7 @@ function CategoryPage() {
                   setEditData(category);
                   setOpenEdit(true);
                 }}
-                className='flex-1 py-2 text-xs font-bold border-2 border-[#00b050]/20 bg-[#00b050]/5 text-[#00b050] hover:bg-[#00b050] hover:text-white hover:border-[#00b050] rounded-xl transition-all'
+                className='flex-1 py-2 text-xs font-bold border-2 border-[#00b050]/20 bg-[#00b050]/5 dark:bg-[#00b050]/10 text-[#00b050] hover:bg-[#00b050] hover:text-white hover:border-[#00b050] rounded-xl transition-all'
               >
                 Edit
               </button>
@@ -120,7 +120,7 @@ function CategoryPage() {
                   setDeleteCategory(category);
                   setOpenDelete(true);
                 }}
-                className='flex-1 py-2 text-xs font-bold border-2 border-red-100 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 rounded-xl transition-all'
+                className='flex-1 py-2 text-xs font-bold border-2 border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-900/10 text-red-500 hover:bg-red-500 hover:text-white hover:border-red-500 rounded-xl transition-all'
               >
                 Delete
               </button>

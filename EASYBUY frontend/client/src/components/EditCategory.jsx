@@ -92,17 +92,17 @@ const EditCategory = ({ close, fetchData, data }) => {
     >
         <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl p-8 animate-scaleIn relative overflow-hidden"
+            className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-[3rem] shadow-2xl p-8 animate-scaleIn relative overflow-hidden border border-white/20"
         >
             {/* Header */}
-            <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-50 dark:border-gray-700">
                 <div className="flex flex-col">
-                    <h2 className="text-2xl font-black text-gray-900 tracking-tight text-nowrap">Update Category</h2>
-                    <p className="text-gray-400 text-sm font-medium">Modify category details</p>
+                    <h2 className="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight text-nowrap">Update Category</h2>
+                    <p className="text-gray-400 dark:text-gray-500 text-sm font-medium">Modify category details</p>
                 </div>
                 <button
                     onClick={close}
-                    className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-2xl transition-all"
+                    className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 rounded-2xl transition-all"
                 >
                     <IoClose size={28} />
                 </button>
@@ -112,7 +112,7 @@ const EditCategory = ({ close, fetchData, data }) => {
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Category Name */}
                 <div className="flex flex-col gap-2">
-                    <label className="text-xs font-extrabold text-gray-400 uppercase tracking-widest px-1">
+                    <label className="text-xs font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">
                         Category Name
                     </label>
                     <input
@@ -121,18 +121,18 @@ const EditCategory = ({ close, fetchData, data }) => {
                         value={dataCategory.name}
                         onChange={handleOnChange}
                         placeholder="e.g. Fresh Vegetables"
-                        className="w-full px-6 py-4 bg-gray-50 border-2 border-transparent focus:border-[#00b050] focus:bg-white focus:ring-4 focus:ring-[#00b050]/10 rounded-[1.5rem] outline-none transition-all font-bold text-gray-800 placeholder:text-gray-300"
+                        className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-2 border-transparent focus:border-[#00b050] focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-[#00b050]/10 rounded-[1.5rem] outline-none transition-all font-bold text-gray-800 dark:text-gray-100 placeholder:text-gray-300 dark:placeholder:text-gray-500"
                     />
                 </div>
 
                 {/* Category Image */}
                 <div className="flex flex-col gap-2">
-                    <label className="text-xs font-extrabold text-gray-400 uppercase tracking-widest px-1">
+                    <label className="text-xs font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">
                         Category Image
                     </label>
 
-                    <div className="flex items-center gap-6 p-4 bg-gray-50 rounded-[2rem] border-2 border-dashed border-gray-200 hover:border-[#00b050]/30 transition-colors group">
-                        <div className="w-28 h-28 shrink-0 rounded-[1.5rem] bg-white shadow-sm flex items-center justify-center overflow-hidden border border-gray-100 group-hover:scale-105 transition-transform duration-500">
+                    <div className="flex items-center gap-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-[2rem] border-2 border-dashed border-gray-200 dark:border-gray-600 hover:border-[#00b050]/30 transition-colors group">
+                        <div className="w-28 h-28 shrink-0 rounded-[1.5rem] bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center overflow-hidden border border-gray-100 dark:border-gray-700 group-hover:scale-105 transition-transform duration-500">
                             {dataCategory.image ? (
                                 <img
                                     src={dataCategory.image}
@@ -141,21 +141,21 @@ const EditCategory = ({ close, fetchData, data }) => {
                                 />
                             ) : (
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                                        <span className="text-gray-300 text-[10px] font-black">?</span>
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center">
+                                        <span className="text-gray-300 dark:text-gray-500 text-[10px] font-black">?</span>
                                     </div>
                                 </div>
                             )}
                         </div>
 
                         <div className="flex flex-col gap-3">
-                            <p className="text-sm text-gray-500 font-medium leading-tight">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium leading-tight">
                                 {dataCategory.image ? "Change current image" : "Upload a clean, high-quality PNG or JPG image"}
                             </p>
                             <label className="cursor-pointer group/btn">
                                 <div className={`px-6 py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all flex items-center gap-2 ${loading
-                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                                    : "bg-white text-[#00b050] border-2 border-[#00b050]/20 hover:border-[#00b050] hover:bg-[#00b050]/5"
+                                    ? "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                                    : "bg-white dark:bg-gray-800 text-[#00b050] border-2 border-[#00b050]/20 hover:border-[#00b050] hover:bg-[#00b050]/5 dark:hover:bg-[#00b050]/10"
                                     }`}>
                                     {loading ? "Uploading..." : "CHANGE IMAGE"}
                                 </div>
@@ -174,8 +174,8 @@ const EditCategory = ({ close, fetchData, data }) => {
                 <button
                     disabled={loading || !dataCategory.name || !dataCategory.image}
                     className={`w-full py-5 rounded-[1.5rem] font-black text-lg tracking-tight transition-all shadow-xl ${loading || !dataCategory.name || !dataCategory.image
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
-                        : "bg-[#00b050] text-white hover:bg-[#00b060] shadow-[#00b050]/30 active:scale-[0.98]"
+                        ? "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed shadow-none"
+                        : "bg-[#00b050] text-white hover:bg-[#00b060] shadow-[#00b050]/30 dark:shadow-none active:scale-[0.98]"
                         }`}
                 >
                     {loading ? "UPDATING..." : "UPDATE CATEGORY"}

@@ -107,6 +107,9 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
   }
 
   const handleAddField = () => {
+    if(!fieldName.trim()){
+      return 
+    }
     setData((preve) => {
       return {
         ...preve,
@@ -153,45 +156,45 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
 
   return createPortal(
     <section className='fixed top-0 right-0 left-0 bottom-0 bg-black/60 backdrop-blur-sm z-[200] p-4 flex items-center justify-center animate-in fade-in duration-300'>
-      <div className='bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-[3rem] shadow-2xl scale-in-95 animate-in duration-300 scrollbar-custom'>
-        <div className='flex items-center justify-between mb-8 sticky top-0 bg-white/80 backdrop-blur-md py-2 z-10'>
-          <h2 className='font-bold text-2xl text-gray-800'>Edit Product Details</h2>
-          <button onClick={close} className='p-2 hover:bg-gray-100 rounded-full transition-colors'>
-            <IoClose size={28} className='text-gray-400' />
+      <div className='bg-white dark:bg-gray-800 w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-[3rem] shadow-2xl scale-in-95 animate-in duration-300 scrollbar-custom border border-white/20'>
+        <div className='flex items-center justify-between mb-8 sticky top-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md py-2 z-10 transition-colors duration-300'>
+          <h2 className='font-bold text-2xl text-gray-800 dark:text-gray-100'>Edit Product Details</h2>
+          <button onClick={close} className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors'>
+            <IoClose size={28} className='text-gray-400 dark:text-gray-500' />
           </button>
         </div>
 
         <form className='grid gap-8' onSubmit={handleSubmit}>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
             <div className='grid gap-2'>
-              <label htmlFor='edit-name' className='font-bold text-gray-700 ml-1'>Product Name</label>
+              <label htmlFor='edit-name' className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Product Name</label>
               <input
                 id='edit-name' type='text' placeholder='e.g. Fresh Organic Apples' name='name' value={data.name} onChange={handleChange} required
-                className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all placeholder:text-gray-300'
+                className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all placeholder:text-gray-300 dark:text-gray-100 dark:placeholder:text-gray-500'
               />
             </div>
 
             <div className='grid gap-2'>
-              <label htmlFor='edit-unit' className='font-bold text-gray-700 ml-1'>Unit / Weight</label>
+              <label htmlFor='edit-unit' className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Unit / Weight</label>
               <input
                 id='edit-unit' type='text' placeholder='e.g. 1kg, 500ml' name='unit' value={data.unit} onChange={handleChange} required
-                className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all placeholder:text-gray-300'
+                className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all placeholder:text-gray-300 dark:text-gray-100 dark:placeholder:text-gray-500'
               />
             </div>
           </div>
 
           <div className='grid gap-2'>
-            <label htmlFor='edit-description' className='font-bold text-gray-700 ml-1'>Description</label>
+            <label htmlFor='edit-description' className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Description</label>
             <textarea
               id='edit-description' placeholder='Describe your product details...' name='description' value={data.description} onChange={handleChange} required rows={4}
-              className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all placeholder:text-gray-300 resize-none'
+              className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all placeholder:text-gray-300 dark:text-gray-100 dark:placeholder:text-gray-500 resize-none'
             />
           </div>
 
           <div>
-            <p className='font-bold text-gray-700 ml-1 mb-2'>Product Images</p>
+            <p className='font-bold text-gray-700 dark:text-gray-300 ml-1 mb-2'>Product Images</p>
             <div className='flex flex-wrap gap-4'>
-              <label htmlFor='editProductImage' className='w-32 h-32 bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl flex justify-center items-center cursor-pointer hover:border-[#00b050] hover:bg-[#00b050]/5 transition-all group'>
+              <label htmlFor='editProductImage' className='w-32 h-32 bg-gray-50 dark:bg-gray-700/50 border-2 border-dashed border-gray-200 dark:border-gray-600 rounded-3xl flex justify-center items-center cursor-pointer hover:border-[#00b050] hover:bg-[#00b050]/5 dark:hover:bg-[#00b050]/10 transition-all group'>
                 <div className='text-center flex flex-col items-center gap-1'>
                   {imageLoading ? <Loading /> : (
                     <>
@@ -204,7 +207,7 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
               </label>
 
               {data.image.map((img, index) => (
-                <div key={img + index} className='w-32 h-32 bg-white border-2 border-gray-100 rounded-3xl relative group overflow-hidden shadow-sm'>
+                <div key={img + index} className='w-32 h-32 bg-white dark:bg-gray-700 border-2 border-gray-100 dark:border-gray-600 rounded-3xl relative group overflow-hidden shadow-sm'>
                   <img src={img} alt={img} className='w-full h-full object-scale-down cursor-pointer' onClick={() => setViewImageURL(img)} />
                   <button type='button' onClick={() => handleDeleteImage(index)} className='absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity'>
                     <MdDelete size={18} />
@@ -216,7 +219,7 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
             <div className='grid gap-2'>
-              <label className='font-bold text-gray-700 ml-1'>Category</label>
+              <label className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Category</label>
               <SelectionDropdown
                 placeholder="Select Category" options={allCategory}
                 onChange={(value) => {
@@ -236,7 +239,7 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
             </div>
 
             <div className='grid gap-2'>
-              <label className='font-bold text-gray-700 ml-1'>Sub Category</label>
+              <label className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Sub Category</label>
               <SelectionDropdown
                 placeholder="Select Sub Category" options={allSubCategory}
                 onChange={(value) => {
@@ -258,39 +261,52 @@ const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
 
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
             <div className='grid gap-2'>
-              <label htmlFor='edit-stock' className='font-bold text-gray-700 ml-1'>Stock Quantity</label>
+              <label htmlFor='edit-stock' className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Stock Quantity</label>
               <input
                 id='edit-stock' type='number' placeholder='0' name='stock' value={data.stock} onChange={handleChange} required
-                className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all'
+                className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all dark:text-gray-100'
               />
             </div>
             <div className='grid gap-2'>
-              <label htmlFor='edit-price' className='font-bold text-gray-700 ml-1'>Base Price (₹)</label>
+              <label htmlFor='edit-price' className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Base Price (₹)</label>
               <input
                 id='edit-price' type='number' placeholder='0.00' name='price' value={data.price} onChange={handleChange} required
-                className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all'
+                className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all dark:text-gray-100'
               />
             </div>
             <div className='grid gap-2'>
-              <label htmlFor='edit-discount' className='font-bold text-gray-700 ml-1'>Discount (%)</label>
+              <label htmlFor='edit-discount' className='font-bold text-gray-700 dark:text-gray-300 ml-1'>Discount (%)</label>
               <input
                 id='edit-discount' type='number' placeholder='0' name='discount' value={data.discount} onChange={handleChange} required
-                className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all'
+                className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all dark:text-gray-100'
               />
             </div>
           </div>
 
           <div className='space-y-6'>
             {Object.keys(data.more_details).map((k, index) => (
-              <div key={k + index} className='grid gap-2'>
-                <label htmlFor={"edit-" + k} className='font-bold text-gray-700 ml-1'>{k}</label>
+              <div key={k + index} className='grid gap-2 relative'>
+                <div className='flex justify-between items-center'>
+                  <label htmlFor={"edit-" + k} className='font-bold text-gray-700 dark:text-gray-300 ml-1'>{k}</label>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      const newDetails = { ...data.more_details }
+                      delete newDetails[k]
+                      setData(prev => ({ ...prev, more_details: newDetails }))
+                    }}
+                    className='text-red-500 hover:text-red-700 transition-colors p-1'
+                  >
+                    <IoClose size={20} />
+                  </button>
+                </div>
                 <input
                   id={"edit-" + k} type='text' value={data.more_details[k]} required
                   onChange={(e) => {
                     const value = e.target.value
                     setData(preve => ({ ...preve, more_details: { ...preve.more_details, [k]: value } }))
                   }}
-                  className='bg-gray-50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all'
+                  className='bg-gray-50 dark:bg-gray-700/50 p-4 outline-none border-2 border-transparent focus:border-[#00b050] focus:ring-4 focus:ring-[#00b050]/10 rounded-2xl transition-all dark:text-gray-100'
                 />
               </div>
             ))}

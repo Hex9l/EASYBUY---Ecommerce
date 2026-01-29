@@ -45,9 +45,9 @@ const MyOrders = () => {
 
   return (
     <div className='min-h-full pb-10'>
-      <div className='sticky top-24 lg:top-20 z-10 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100 p-4 px-6 mb-6 rounded-2xl'>
-        <h1 className='font-bold text-xl lg:text-2xl text-gray-800'>My Orders</h1>
-        <p className='text-xs lg:text-sm text-gray-500 mt-1'>View and track your order history</p>
+      <div className='sticky top-24 lg:top-20 z-10 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800 p-4 px-6 mb-6 rounded-2xl transition-colors duration-300'>
+        <h1 className='font-bold text-xl lg:text-2xl text-gray-800 dark:text-gray-100'>My Orders</h1>
+        <p className='text-xs lg:text-sm text-gray-500 dark:text-gray-400 mt-1'>View and track your order history</p>
       </div>
 
       <div className='max-w-4xl space-y-4'>
@@ -68,27 +68,27 @@ const MyOrders = () => {
                 transition={{ delay: index * 0.1 }}
                 key={orderGroup.orderId}
                 onClick={() => navigate(`/dashboard/order-detail/${orderGroup.orderId}`)}
-                className='bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer'
+                className='bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all cursor-pointer'
               >
                 {/* Order Header */}
                 <div className='p-4 flex items-center justify-between'>
                   <div className='flex items-center gap-3'>
                     {/* Status Icon */}
-                    <div className='w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0'>
-                      <FaCheck className='text-green-600 text-lg' />
+                    <div className='w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center shrink-0'>
+                      <FaCheck className='text-green-600 dark:text-green-500 text-lg' />
                     </div>
 
                     {/* Order Info */}
                     <div>
-                      <h3 className='font-bold text-gray-800 text-base'>{statusText}</h3>
-                      <p className='text-sm text-gray-500'>
+                      <h3 className='font-bold text-gray-800 dark:text-gray-200 text-base'>{statusText}</h3>
+                      <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {DisplayPriceInRupees(orderGroup.totalAmt)} • {formattedDate}
                       </p>
                     </div>
                   </div>
 
                   {/* Arrow */}
-                  <FaChevronRight className='text-gray-400' />
+                  <FaChevronRight className='text-gray-400 dark:text-gray-500' />
                 </div>
 
                 {/* Product Images Grid */}
@@ -97,7 +97,7 @@ const MyOrders = () => {
                     {orderGroup.items.slice(0, 4).map((item, idx) => (
                       <div
                         key={idx}
-                        className='aspect-square bg-gray-50 rounded-xl border border-gray-100 p-2 flex items-center justify-center overflow-hidden'
+                        className='aspect-square bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700 p-2 flex items-center justify-center overflow-hidden'
                       >
                         <img
                           src={
@@ -106,14 +106,14 @@ const MyOrders = () => {
                             "https://placehold.co/100?text=No+Image"
                           }
                           alt={item?.product_details?.name || "Product"}
-                          className='w-full h-full object-contain'
+                          className='w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal'
                           onError={(e) => { e.target.src = "https://placehold.co/100?text=Error" }}
                         />
                       </div>
                     ))}
                     {orderGroup.items.length > 4 && (
-                      <div className='aspect-square bg-gray-100 rounded-xl border border-gray-200 flex items-center justify-center'>
-                        <span className='text-gray-600 font-bold text-sm'>+{orderGroup.items.length - 4}</span>
+                      <div className='aspect-square bg-gray-100 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 flex items-center justify-center'>
+                        <span className='text-gray-600 dark:text-gray-300 font-bold text-sm'>+{orderGroup.items.length - 4}</span>
                       </div>
                     )}
                   </div>

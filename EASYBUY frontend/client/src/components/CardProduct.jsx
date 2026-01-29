@@ -16,12 +16,12 @@ const CardProduct = ({ data }) => {
   const url = `/product/${valideURLConvert(data.name)}-${data._id}`
 
   return (
-    <Link to={url} className='group flex flex-col gap-2.5 rounded-2xl cursor-pointer bg-white border border-gray-100 hover:shadow-lg transition-all duration-300 w-full min-w-[150px] max-w-[150px] lg:min-w-[180px] lg:max-w-[180px] p-3 flex-grow' >
+    <Link to={url} className='group flex flex-col gap-2.5 rounded-xl cursor-pointer bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:shadow-lg hover:border-green-100 dark:hover:border-green-800 transition-all duration-300 w-[150px] md:w-[170px] lg:w-[190px] p-2.5 h-full' >
       {/* Product Image Section */}
-      <div className='relative h-32 lg:h-36 w-full rounded-xl overflow-hidden flex items-center justify-center bg-gray-50/50 group-hover:bg-gray-100 transition-colors duration-500'>
+      <div className='relative h-32 lg:h-36 w-full rounded-xl overflow-hidden flex items-center justify-center bg-gray-50/50 dark:bg-gray-700/50 group-hover:bg-gray-100 dark:group-hover:bg-gray-700 transition-colors duration-500'>
         <img
           src={data.image[0]}
-          className='w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500'
+          className='w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500 mix-blend-multiply dark:mix-blend-normal'
           alt={data.name}
         />
         {Boolean(data.discount) && (
@@ -33,18 +33,18 @@ const CardProduct = ({ data }) => {
 
       <div className='px-0.5 flex flex-col gap-2 flex-grow'>
         {/* Delivery Time Badge */}
-        <div className='flex items-center gap-1 bg-gray-100/70 rounded-md px-1.5 py-0.5 w-fit'>
-          <IoMdTimer className='text-gray-600' size={13} />
-          <span className='text-[9px] lg:text-[10px] font-bold text-gray-700 tracking-tight'>8 MINS</span>
+        <div className='flex items-center gap-1 bg-gray-100/70 dark:bg-gray-700/50 rounded-md px-1.5 py-0.5 w-fit'>
+          <IoMdTimer className='text-gray-600 dark:text-gray-400' size={13} />
+          <span className='text-[9px] lg:text-[10px] font-bold text-gray-700 dark:text-gray-300 tracking-tight'>8 MINS</span>
         </div>
 
         {/* Product Name */}
-        <div className='font-bold text-gray-800 text-[13px] lg:text-[14px] line-clamp-2 leading-snug min-h-[36px]'>
+        <div className='font-bold text-gray-800 dark:text-gray-200 text-[13px] lg:text-[14px] line-clamp-2 leading-snug min-h-[36px]'>
           {data.name}
         </div>
 
         {/* Product Unit */}
-        <div className='text-gray-400 text-[11px] lg:text-xs font-medium'>
+        <div className='text-gray-400 dark:text-gray-500 text-[11px] lg:text-xs font-medium'>
           {data.unit}
         </div>
       </div>
@@ -52,11 +52,11 @@ const CardProduct = ({ data }) => {
       {/* Price and Add button Section */}
       <div className='px-0.5 flex items-center justify-between gap-2 mt-auto pb-0.5'>
         <div className='flex flex-col gap-0.5'>
-          <div className='font-bold text-gray-900 text-xs lg:text-[13px]'>
+          <div className='font-bold text-gray-900 dark:text-gray-100 text-xs lg:text-[13px]'>
             {DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}
           </div>
           {data.discount > 0 && (
-            <div className='text-[9px] lg:text-[10px] text-gray-400 line-through font-medium'>
+            <div className='text-[9px] lg:text-[10px] text-gray-400 dark:text-gray-500 line-through font-medium'>
               {DisplayPriceInRupees(data.price)}
             </div>
           )}
@@ -70,7 +70,7 @@ const CardProduct = ({ data }) => {
           }}
         >
           {data.stock == 0 ? (
-            <div className='text-[10px] lg:text-xs font-extrabold text-red-500 bg-red-50 px-2 py-1 rounded-lg border border-red-100 uppercase'>
+            <div className='text-[10px] lg:text-xs font-extrabold text-red-500 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-lg border border-red-100 dark:border-red-900/30 uppercase'>
               SOLD OUT
             </div>
           ) : (

@@ -39,13 +39,13 @@ const LocationPicker = ({ close }) => {
 
     return (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-fadeIn">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-fadeIn transition-colors duration-300">
 
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-800">Select Location</h2>
-                    <button onClick={close} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <IoMdClose size={24} className="text-gray-600" />
+                <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
+                    <h2 className="text-xl font-bold text-gray-800 dark:text-white">Select Location</h2>
+                    <button onClick={close} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                        <IoMdClose size={24} className="text-gray-600 dark:text-gray-300" />
                     </button>
                 </div>
 
@@ -55,24 +55,24 @@ const LocationPicker = ({ close }) => {
                     {/* Detect Location */}
                     <button
                         onClick={handleDetectLocation}
-                        className="flex items-center gap-4 w-full p-4 border border-green-200 bg-green-50 rounded-xl hover:bg-green-100 transition-all group"
+                        className="flex items-center gap-4 w-full p-4 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-xl hover:bg-green-100 dark:hover:bg-green-900/30 transition-all group"
                     >
-                        <div className="bg-white p-2 rounded-full shadow-sm text-green-600 group-hover:scale-110 transition-transform">
+                        <div className="bg-white dark:bg-gray-700 p-2 rounded-full shadow-sm text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform">
                             <IoMdLocate size={24} />
                         </div>
                         <div className="text-left">
-                            <p className="font-bold text-green-700">Detect my location</p>
-                            <p className="text-xs text-green-600">Using GPS</p>
+                            <p className="font-bold text-green-700 dark:text-green-400">Detect my location</p>
+                            <p className="text-xs text-green-600 dark:text-green-500">Using GPS</p>
                         </div>
                     </button>
 
                     {/* Saved Addresses */}
                     {addressList && addressList.filter(addr => addr.status).length > 0 && (
                         <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2 text-gray-400 mb-1">
-                                <div className="h-px bg-gray-200 flex-1"></div>
+                            <div className="flex items-center gap-2 text-gray-400 dark:text-gray-500 mb-1">
+                                <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
                                 <span className="text-xs font-medium tracking-wider">SAVED ADDRESSES</span>
-                                <div className="h-px bg-gray-200 flex-1"></div>
+                                <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
                             </div>
 
                             <div className='flex flex-col gap-2 max-h-48 overflow-y-auto scrollbarCustom'>
@@ -84,14 +84,14 @@ const LocationPicker = ({ close }) => {
                                             dispatch(setSelectedAddress(addressStr));
                                             close();
                                         }}
-                                        className='p-3 border border-gray-100 rounded-lg hover:bg-gray-50 hover:border-gray-300 cursor-pointer flex gap-3 items-center text-left transition-all'
+                                        className='p-3 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-gray-300 dark:hover:border-gray-600 cursor-pointer flex gap-3 items-center text-left transition-all'
                                     >
-                                        <div className='bg-gray-100 p-2 rounded-full text-gray-500'>
+                                        <div className='bg-gray-100 dark:bg-gray-700 p-2 rounded-full text-gray-500 dark:text-gray-400'>
                                             <IoMdLocate size={18} />
                                         </div>
                                         <div className='flex-1'>
-                                            <p className='font-bold text-gray-800 text-sm line-clamp-1'>{addr.address_line}</p>
-                                            <p className='text-xs text-gray-500'>{addr.city}, {addr.state}, {addr.pincode}</p>
+                                            <p className='font-bold text-gray-800 dark:text-gray-200 text-sm line-clamp-1'>{addr.address_line}</p>
+                                            <p className='text-xs text-gray-500 dark:text-gray-400'>{addr.city}, {addr.state}, {addr.pincode}</p>
                                         </div>
                                     </button>
                                 ))}
@@ -100,10 +100,10 @@ const LocationPicker = ({ close }) => {
                     )}
 
                     {/* Divider */}
-                    <div className="flex items-center gap-4 text-gray-400">
-                        <div className="h-px bg-gray-200 flex-1"></div>
+                    <div className="flex items-center gap-4 text-gray-400 dark:text-gray-500">
+                        <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
                         <span className="text-sm font-medium">OR ENTER MANUALLY</span>
-                        <div className="h-px bg-gray-200 flex-1"></div>
+                        <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1"></div>
                     </div>
 
                     {/* Manual Entry */}
@@ -111,7 +111,7 @@ const LocationPicker = ({ close }) => {
                         <input
                             type="text"
                             placeholder="Enter pincode or city..."
-                            className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow"
+                            className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow placeholder:text-gray-400 dark:placeholder:text-gray-500"
                             value={manualAddress}
                             onChange={(e) => setManualAddress(e.target.value)}
                         />

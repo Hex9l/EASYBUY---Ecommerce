@@ -51,10 +51,10 @@ const Otpverification = () => {
   };
 
   return (
-    <section className="min-h-[90vh] w-full flex items-center justify-center px-4 relative overflow-hidden bg-slate-50">
+    <section className="min-h-[90vh] w-full flex items-center justify-center px-4 relative overflow-hidden bg-slate-50 dark:bg-gray-900 transition-colors duration-300">
       {/* Animated Background Elements */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-3xl opacity-50 animate-pulse" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-100 rounded-full blur-3xl opacity-50 animate-pulse delay-700" />
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50 animate-pulse" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-100 dark:bg-green-900/20 rounded-full blur-3xl opacity-50 animate-pulse delay-700" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -62,19 +62,19 @@ const Otpverification = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md"
       >
-        <div className="bg-white/80 backdrop-blur-xl border border-white/40 p-4 md:p-8 rounded-[2.5rem] shadow-2xl shadow-green-900/10">
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/40 dark:border-white/10 p-4 md:p-8 rounded-[2.5rem] shadow-2xl shadow-green-900/10 dark:shadow-green-900/30 transition-colors duration-300">
           {/* Header */}
           <div className="text-center mb-8">
             <motion.h1
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              className="text-3xl font-bold text-gray-800"
+              className="text-3xl font-bold text-gray-800 dark:text-gray-100"
             >
               Verify OTP
             </motion.h1>
-            <p className="text-gray-500 mt-2 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
               We've sent a 6-digit code to <br />
-              <span className="font-semibold text-gray-700">{location.state?.email}</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-300">{location.state?.email}</span>
             </p>
           </div>
 
@@ -112,7 +112,7 @@ const Otpverification = () => {
                       inputRef.current[index - 1]?.focus();
                     }
                   }}
-                  className="w-10 h-12 sm:w-14 sm:h-16 text-xl sm:text-2xl font-bold text-center bg-gray-50/50 border border-gray-200 rounded-xl sm:rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-green-600"
+                  className="w-10 h-12 sm:w-14 sm:h-16 text-xl sm:text-2xl font-bold text-center bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl sm:rounded-2xl focus:ring-4 focus:ring-green-500/10 focus:border-green-500 outline-none transition-all duration-300 text-green-600 dark:text-green-400"
                 />
               ))}
             </div>
@@ -126,7 +126,7 @@ const Otpverification = () => {
                 transition-all duration-300 flex items-center justify-center gap-2
                 ${validValue
                   ? "bg-gradient-to-r from-green-600 to-green-500 hover:shadow-green-600/40"
-                  : "bg-gray-400 cursor-not-allowed"}
+                  : "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"}
               `}
             >
               Verify OTP
@@ -135,11 +135,11 @@ const Otpverification = () => {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
               Didn't receive the code?{" "}
               <button
                 onClick={() => navigate("/forgot-password")}
-                className="text-green-600 font-bold hover:underline transition-all"
+                className="text-green-600 dark:text-green-400 font-bold hover:underline transition-all"
               >
                 Resend
               </button>

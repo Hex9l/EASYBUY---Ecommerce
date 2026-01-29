@@ -5,20 +5,20 @@ const FaqItem = ({ question, answer }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="border-b border-gray-100 last:border-none">
+        <div className="border-b border-gray-100 dark:border-gray-700 last:border-none">
             <button
                 className="w-full flex items-center justify-between py-4 text-left focus:outline-none"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className={`font-semibold text-lg ${isOpen ? 'text-[#0c831f]' : 'text-gray-800'}`}>
+                <span className={`font-semibold text-lg ${isOpen ? 'text-[#0c831f]' : 'text-gray-800 dark:text-gray-100'}`}>
                     {question}
                 </span>
-                <span className="text-gray-400">
+                <span className="text-gray-400 dark:text-gray-500">
                     {isOpen ? <FaMinus size={14} /> : <FaPlus size={14} />}
                 </span>
             </button>
             {isOpen && (
-                <div className="pb-4 text-gray-600 leading-relaxed">
+                <div className="pb-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                     {answer}
                 </div>
             )}
@@ -51,11 +51,11 @@ const Faq = () => {
     ];
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-white dark:bg-gray-900 min-h-screen transition-colors duration-300">
             <div className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-8 text-center">Frequently Asked Questions</h1>
+                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-8 text-center">Frequently Asked Questions</h1>
 
-                <div className="bg-white border boundary-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white dark:bg-gray-800 border dark:border-gray-700 boundary-gray-200 rounded-xl p-6 shadow-sm transition-colors duration-300">
                     {faqs.map((faq, index) => (
                         <FaqItem key={index} question={faq.question} answer={faq.answer} />
                     ))}

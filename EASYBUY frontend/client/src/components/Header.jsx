@@ -13,6 +13,7 @@ import LocationPicker from './LocationPicker';
 import { useGlobalContext } from '../provider/GlobalProvider';
 import DisplayCartItem from './DisplayCartItem';
 import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees';
+import ThemeToggle from './ThemeToggle';
 
 function Header({ showSearch }) {
   const isMobile = useMobile();
@@ -52,28 +53,28 @@ function Header({ showSearch }) {
   };
 
   return (
-    <header className="h-20 lg:h-24 lg:shadow-md sticky top-0 flex justify-center flex-col items-center bg-white z-50 px-2 lg:px-0 transition-all duration-300">
+    <header className="h-auto lg:h-24 shadow-sm lg:shadow-md sticky top-0 flex justify-center flex-col items-center bg-white dark:bg-gray-900 z-50 transition-all duration-300 border-b border-transparent dark:border-gray-800">
       {
         !(isMobile && isSearchPage) && (
-          <div className='container mx-auto flex items-center pt-2 pb-2 px-2 md:px-4 lg:px-6 justify-between gap-4 lg:gap-8'>
+          <div className='container flex items-center justify-between py-3 lg:py-2 gap-4'>
             {/* Logo */}
             <div className='flex items-center gap-4 md:gap-6 lg:gap-10 shrink-0'>
               <div className='flex items-center justify-start shrink-0'>
                 <Link to={"/"} className='flex items-center justify-center p-1'>
                   <img src={logo} width={200} height={70} alt="EasyBuy" className='hidden lg:block object-contain transition-transform duration-300 hover:scale-105' />
-                  <img src={logo} width={150} height={50} alt="EasyBuy" className='lg:hidden object-contain max-w-[150px]' />
+                  <img src={logo} width={140} height={40} alt="EasyBuy" className='lg:hidden object-contain max-w-[140px]' />
                 </Link>
               </div>
 
               {/* Delivery Info - Desktop */}
               <div className='hidden lg:flex flex-col gap-0.5 leading-tight shrink-0'>
-                <p className='font-bold text-lg text-gray-900'>Delivery in 8 minutes</p>
+                <p className='font-bold text-lg text-gray-900 dark:text-gray-100'>Delivery in 8 minutes</p>
                 <div
                   className='flex items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors'
                   onClick={() => setOpenAddressModal(true)} // Open Modal
                 >
-                  <span className='text-sm text-gray-600 truncate max-w-[150px]'>{displayAddress}</span>
-                  <FaCaretDown className='text-gray-600 size-3' />
+                  <span className='text-sm text-gray-600 dark:text-gray-400 truncate max-w-[150px]'>{displayAddress}</span>
+                  <FaCaretDown className='text-gray-600 dark:text-gray-400 size-3' />
                 </div>
               </div>
             </div>
@@ -86,19 +87,24 @@ function Header({ showSearch }) {
             {/* login and my cart */}
             <div className='flex items-center gap-2 md:gap-6'>
 
+              {/* Theme Toggle Mobile/Desktop */}
+              <div className=''>
+                <ThemeToggle />
+              </div>
+
               {/* Mobile User Icon */}
-              <button className='text-neutral-500 lg:hidden' onClick={handleMobileUser}>
+              <button className='text-neutral-500 dark:text-gray-300 lg:hidden' onClick={handleMobileUser}>
                 <FaUserCircle size={26} />
               </button>
 
               {/* Mobile Cart Icon */}
-              <button 
-                onClick={() => setOpenCartSection(true)} 
-                className='text-green-600 lg:hidden relative'
+              <button
+                onClick={() => setOpenCartSection(true)}
+                className='text-green-600 dark:text-green-500 lg:hidden relative'
               >
                 <FaShoppingCart size={26} />
                 {totalQty > 0 && (
-                  <span className='absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white'>
+                  <span className='absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-gray-800'>
                     {totalQty}
                   </span>
                 )}
@@ -110,7 +116,7 @@ function Header({ showSearch }) {
                   user?._id ? (
                     <div className='relative'>
                       <div
-                        className='flex items-center cursor-pointer gap-2 font-medium text-gray-800 hover:text-gray-900'
+                        className='flex items-center cursor-pointer gap-2 font-medium text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white'
                         onClick={() => setOpenUserMenu(!openUserMenu)}
                       >
                         <p>Account</p>
@@ -123,13 +129,13 @@ function Header({ showSearch }) {
 
                       {/* User Menu */}
                       {openUserMenu && (
-                        <div className='absolute top-12 right-0 shadow-xl rounded-xl bg-white w-60 border border-gray-100 p-2 z-50'>
+                        <div className='absolute top-12 right-0 shadow-xl rounded-xl bg-white dark:bg-gray-800 w-60 border border-gray-100 dark:border-gray-700 p-2 z-50'>
                           <UserMenu close={handleCloseUserMenu} />
                         </div>
                       )}
                     </div>
                   ) : (
-                    <Link className='font-medium text-lg text-gray-700 hover:text-gray-900' to="/login">Login</Link>
+                    <Link className='font-medium text-lg text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white' to="/login">Login</Link>
                   )
                 }
 
@@ -165,7 +171,7 @@ function Header({ showSearch }) {
       }
 
       {/* Mobile search bar */}
-      <div className='container mx-auto px-2 lg:hidden'>
+      <div className='container px-4 py-3 lg:hidden'>
         <Search />
       </div>
 
