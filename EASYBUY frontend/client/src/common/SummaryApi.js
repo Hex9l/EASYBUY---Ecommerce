@@ -2,7 +2,7 @@
 import Axios from "axios";
 
 
-export const baseURL = "http://localhost:8000";
+export const baseURL = import.meta.env.VITE_BACKEND_URL;
 
 
 Axios.defaults.baseURL = baseURL;
