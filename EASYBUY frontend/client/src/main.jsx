@@ -7,7 +7,6 @@ import router from './route/index'
 import { Provider } from 'react-redux'
 import { store } from './store/store.js'
 import { ThemeProvider } from './provider/ThemeProvider.jsx'
-import "./index.css"
 
 
 createRoot(document.getElementById('root')).render(
