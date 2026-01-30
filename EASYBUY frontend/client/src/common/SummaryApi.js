@@ -2,7 +2,12 @@
 import Axios from "axios";
 
 
-export const baseURL = import.meta.env.VITE_BACKEND_URL;
+const domain = import.meta.env.VITE_BACKEND_URL
+if (!domain) {
+    console.error("VITE_BACKEND_URL is not defined! Using localhost fallback (which will fail in production).")
+}
+
+export const baseURL = domain;
 
 
 Axios.defaults.baseURL = baseURL;
