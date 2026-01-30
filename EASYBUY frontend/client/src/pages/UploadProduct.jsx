@@ -13,7 +13,7 @@ import AxiosToastError from '../utils/AxiosToastError';
 import successAlert from '../utils/SuccessAlert';
 import { useEffect } from 'react';
 import { SummaryApi } from '../common/SummaryApi';
-import uploadImage from '../utils/UploadImage';
+import uploadImage from '../utils/uploadImage';
 import SelectionDropdown from '../components/SelectionDropdown';
 
 const UploadProduct = () => {

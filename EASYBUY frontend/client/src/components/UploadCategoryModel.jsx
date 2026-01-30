@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
-import uploadImage from "../utils/UploadImage";
+import uploadImage from '../utils/uploadImage';
 import axios from "axios";
 import { SummaryApi } from "../common/SummaryApi";
 import AxiosToastError from "../utils/AxiosToastError";
