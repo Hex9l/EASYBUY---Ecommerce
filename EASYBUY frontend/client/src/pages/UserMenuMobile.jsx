@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserMenu from "../components/userMenu";
+import UserMenu from "../components/UserMenu"
 import { IoIosCloseCircle } from "react-icons/io";
+import { useSelector } from "react-redux";
 
 const UserMenuMobile = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024); // Tailwind `md` breakpoint
   const [isOpen, setIsOpen] = useState(true);
-
+  const user = useSelector((state) => state?.user);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user?._id) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const handleClose = () => {
     // We do nothing here because clicking a Link in the menu will naturally navigate away.

@@ -8,7 +8,7 @@ import { FaUserCircle } from "react-icons/fa";
 import useMobile from '../hooks/useMobile';
 import { FaShoppingCart, FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { useSelector } from 'react-redux';
-import UserMenu from './userMenu';
+import UserMenu from './UserMenu';
 import LocationPicker from './LocationPicker';
 import { useGlobalContext } from '../provider/GlobalProvider';
 import DisplayCartItem from './DisplayCartItem';

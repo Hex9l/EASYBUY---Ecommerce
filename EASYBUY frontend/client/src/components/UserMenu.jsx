@@ -61,7 +61,7 @@ const UserMenu = ({ close, closeIcon, dashboard = false }) => {
       <div className="font-semibold text-gray-700 dark:text-gray-200">
         <div className='flex items-center gap-2'>
           <span className="max-w-52 truncate">
-            {user.name || user.mobile}
+            {user?.name || user?.mobile}
             {user.role === "ADMIN" && <span className="text-red-500 text-xs font-medium ml-1">(Admin)</span>}
           </span>
           <Link onClick={handleClose} to="/dashboard/profile" className="hover:text-yellow-800 dark:hover:text-yellow-500">
